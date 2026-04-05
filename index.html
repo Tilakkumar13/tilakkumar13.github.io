@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tilak Kumar S H — GIS · ML · Remote Sensing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --surface: #0d1120;
+    --surface2: #131928;
+    --accent: #3dffc4;
+    --accent2: #5b8fff;
+    --accent3: #ff6b6b;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --border: rgba(61,255,196,0.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed; top: 0; left: 0; z-index: 9999;
+    pointer-events: none;
+  }
+  .cursor-dot {
+    width: 6px; height: 6px; background: var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(61,255,196,0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+    position: absolute; top: 0; left: 0;
+  }
+
+  /* STAR CANVAS */
+  #starfield {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+  }
+
+  /* GRID OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(61,255,196,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,255,196,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 60px;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    background: rgba(6,8,16,0.7);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 18px;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+  .nav-links {
+    display: flex; gap: 36px; list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-status {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; color: var(--muted);
+  }
+  .status-dot {
+    width: 7px; height: 7px; background: var(--accent);
+    border-radius: 50%; animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(61,255,196,0.4); }
+    50% { opacity:0.7; box-shadow: 0 0 0 6px rgba(61,255,196,0); }
+  }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 60px 80px;
+    position: relative;
+  }
+  .hero-inner { max-width: 1100px; width: 100%; }
+  .hero-label {
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 24px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-label::before {
+    content: ''; width: 32px; height: 1px; background: var(--accent);
+  }
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(52px, 8vw, 110px);
+    font-weight: 800; line-height: 0.92;
+    letter-spacing: -3px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff 0%, #a0b4c8 60%, var(--accent) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .hero-title-line {
+    font-family: 'Fraunces', serif;
+    font-weight: 300; font-style: italic;
+    font-size: clamp(20px, 3vw, 36px);
+    color: var(--muted); margin-bottom: 40px;
+    letter-spacing: 1px;
+  }
+  .hero-desc {
+    max-width: 560px; color: #8b95a8;
+    line-height: 1.8; font-size: 13px; margin-bottom: 52px;
+  }
+  .hero-cta {
+    display: flex; gap: 16px; align-items: center; flex-wrap: wrap;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px;
+    background: var(--accent); color: #060810;
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; border: none; cursor: none;
+    transition: all 0.2s;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(61,255,196,0.25); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 14px 28px; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'DM Mono', monospace;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; cursor: none; transition: all 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hero-scroll {
+    position: absolute; bottom: 40px; left: 60px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 11px; color: var(--muted); letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 48px; background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollAnim 2s ease-in-out infinite;
+  }
+  @keyframes scrollAnim { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(0.5)} }
+
+  /* FLOATING COORDS */
+  .hero-coords {
+    position: absolute; right: 60px; top: 50%;
+    transform: translateY(-50%);
+    text-align: right;
+    font-size: 10px; color: rgba(61,255,196,0.3); letter-spacing: 0.1em;
+    line-height: 2;
+  }
+  .hero-coords span { display: block; }
+  .coord-accent { color: rgba(61,255,196,0.6); }
+
+  /* DIVIDER */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.2; margin: 0 60px;
+  }
+
+  /* ABOUT / STATS */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; margin: 0; background: var(--border);
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  }
+  .stat-item {
+    padding: 40px 48px; background: var(--bg);
+    transition: background 0.3s;
+  }
+  .stat-item:hover { background: var(--surface); }
+  .stat-num {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 42px; color: var(--accent); line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+
+  /* ABOUT SECTION */
+  .about {
+    padding: 100px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  }
+  .section-tag {
+    font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-tag::before { content:'//'; opacity:0.5; }
+  .section-heading {
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: clamp(28px, 3.5vw, 44px);
+    line-height: 1.1; letter-spacing: -1px;
+    margin-bottom: 28px;
+  }
+  .about-text { color: #8b95a8; line-height: 1.9; font-size: 13px; }
+  .about-text p + p { margin-top: 16px; }
+
+  /* SKILLS GRID */
+  .skills-grid {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .skill-row { display: flex; flex-direction: column; gap: 6px; }
+  .skill-meta { display: flex; justify-content: space-between; }
+  .skill-name { font-size: 12px; color: var(--text); letter-spacing: 0.05em; }
+  .skill-pct { font-size: 11px; color: var(--accent); }
+  .skill-bar {
+    height: 2px; background: rgba(255,255,255,0.06); overflow: hidden;
+  }
+  .skill-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 1s cubic-bezier(0.4,0,0.2,1);
+  }
+  .skill-fill.animate { transform: scaleX(1); }
+
+  /* EXPERIENCE */
+  .experience { padding: 100px 60px; }
+  .exp-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; margin-top: 60px; }
+  .exp-date {
+    font-size: 11px; color: var(--muted); letter-spacing: 0.08em;
+    padding-top: 4px; border-right: 1px solid var(--border);
+    padding-right: 40px;
+  }
+  .exp-content { padding-left: 40px; padding-bottom: 60px; position: relative; }
+  .exp-content::before {
+    content: '';
+    position: absolute; left: -5px; top: 7px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .exp-role {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px;
+    margin-bottom: 4px; letter-spacing: -0.5px;
+  }
+  .exp-company { font-size: 12px; color: var(--accent); margin-bottom: 16px; }
+  .exp-desc { color: #8b95a8; font-size: 12px; line-height: 1.8; }
+  .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .tag {
+    padding: 4px 10px; border: 1px solid var(--border);
+    font-size: 10px; letter-spacing: 0.08em; color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* PROJECTS */
+  .projects { padding: 100px 60px; }
+  .proj-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; margin-top: 60px; }
+  .proj-card {
+    padding: 40px; background: var(--surface);
+    border: 1px solid transparent;
+    transition: all 0.3s; position: relative; overflow: hidden;
+    cursor: none;
+  }
+  .proj-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(61,255,196,0.04) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .proj-card:hover { border-color: var(--border); }
+  .proj-card:hover::before { opacity: 1; }
+  .proj-num {
+    font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800;
+    color: rgba(61,255,196,0.06); position: absolute;
+    top: 20px; right: 24px; line-height: 1;
+  }
+  .proj-cat {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+  }
+  .proj-title {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px;
+    line-height: 1.3; margin-bottom: 14px; letter-spacing: -0.3px;
+  }
+  .proj-desc { color: #6b7a8d; font-size: 12px; line-height: 1.8; }
+  .proj-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+  .tech-pill {
+    padding: 3px 8px; background: rgba(91,143,255,0.08);
+    color: var(--accent2); font-size: 10px; letter-spacing: 0.06em;
+    border: 1px solid rgba(91,143,255,0.15);
+  }
+  .proj-card.featured {
+    grid-column: span 2;
+    background: linear-gradient(135deg, var(--surface) 0%, rgba(61,255,196,0.03) 100%);
+  }
+
+  /* EDUCATION */
+  .education { padding: 100px 60px; }
+  .edu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 60px; }
+  .edu-card {
+    padding: 36px; background: var(--surface);
+    border-top: 2px solid transparent; transition: all 0.3s;
+  }
+  .edu-card:hover { border-top-color: var(--accent); background: var(--surface2); }
+  .edu-type { font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+  .edu-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; line-height: 1.4; margin-bottom: 8px; }
+  .edu-org { font-size: 12px; color: var(--accent); margin-bottom: 6px; }
+  .edu-period { font-size: 11px; color: var(--muted); }
+
+  /* CONTACT */
+  .contact {
+    padding: 100px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    border-top: 1px solid var(--border);
+  }
+  .contact-left .section-heading { font-size: clamp(32px, 4vw, 52px); }
+  .contact-links { display: flex; flex-direction: column; gap: 20px; margin-top: 48px; }
+  .contact-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 24px; border: 1px solid var(--border);
+    text-decoration: none; color: var(--text); transition: all 0.3s; cursor: none;
+  }
+  .contact-link:hover {
+    border-color: var(--accent); background: rgba(61,255,196,0.03);
+    transform: translateX(4px);
+  }
+  .contact-link-label { font-size: 11px; color: var(--muted); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .contact-link-value { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 14px; }
+  .link-arrow { color: var(--accent); font-size: 18px; }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 60px; border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy { font-size: 11px; color: var(--muted); }
+  .footer-loc {
+    font-size: 11px; color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ANIMATIONS */
+  .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.4,0,0.2,1); }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+  .fade-in-delay-1 { transition-delay: 0.1s; }
+  .fade-in-delay-2 { transition-delay: 0.2s; }
+  .fade-in-delay-3 { transition-delay: 0.3s; }
+
+  /* GLITCH */
+  .glitch {
+    position: relative;
+  }
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute; left: 2px; top: 0;
+    color: var(--accent2);
+    opacity: 0;
+    clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+    animation: glitch 8s infinite 3s;
+  }
+  @keyframes glitch {
+    0%,95%,100% { opacity: 0; transform: translateX(0); }
+    96% { opacity: 0.3; transform: translateX(-3px); }
+    97% { opacity: 0; }
+    98% { opacity: 0.2; transform: translateX(3px); }
+  }
+
+  /* SCAN LINE */
+  .hero::after {
+    content: '';
+    position: absolute; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.3;
+    animation: scanLine 6s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes scanLine {
+    0% { top: 0%; }
+    100% { top: 100%; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .about { padding: 60px 24px; grid-template-columns: 1fr; gap: 40px; }
+    .experience, .projects, .education, .contact { padding: 60px 24px; }
+    .stats-row { grid-template-columns: repeat(2,1fr); }
+    .proj-grid { grid-template-columns: 1fr; }
+    .proj-card.featured { grid-column: span 1; }
+    .edu-grid { grid-template-columns: 1fr; }
+    .contact { grid-template-columns: 1fr; }
+    .hero-coords { display: none; }
+    .exp-grid { grid-template-columns: 1fr; }
+    .exp-date { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 12px; margin-bottom: 20px; }
+    .exp-content { padding-left: 0; }
+    .exp-content::before { display: none; }
+    .nav-links { display: none; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+    .section-divider { margin: 0 24px; }
+    .hero-scroll { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+<div class="cursor" id="cursor">
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">TK.SH</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    Available for opportunities
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-label fade-in">GIS Specialist · ML Engineer · Remote Sensing</div>
+    <h1 class="hero-name glitch fade-in fade-in-delay-1" data-text="TILAK KUMAR">TILAK KUMAR</h1>
+    <div class="hero-name glitch fade-in fade-in-delay-1" data-text="S H" style="margin-bottom:24px">S H</div>
+    <div class="hero-title-line fade-in fade-in-delay-2">Mapping the Earth. Training the Machines.</div>
+    <p class="hero-desc fade-in fade-in-delay-2">
+      I fuse geospatial intelligence with AI to build systems that understand our planet — from early warning systems for landslides, to predictive flood maps, to terrain-optimized LiDAR collection.
+    </p>
+    <div class="hero-cta fade-in fade-in-delay-3">
+      <a href="#projects" class="btn-primary">↓ View Projects</a>
+      <a href="#contact" class="btn-secondary">Get In Touch →</a>
+    </div>
+  </div>
+  <div class="hero-coords">
+    <span class="coord-accent">// LOCATION</span>
+    <span>51.9607° N</span>
+    <span>7.6261° E</span>
+    <span style="margin-top:16px" class="coord-accent">// DOMAIN</span>
+    <span>GIS · ML · RS</span>
+    <span>BCA Graduate</span>
+    <span style="margin-top:16px" class="coord-accent">// STATUS</span>
+    <span>Open to Work</span>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-item fade-in">
+    <div class="stat-num">10+</div>
+    <div class="stat-label">Projects Shipped</div>
+  </div>
+  <div class="stat-item fade-in fade-in-delay-1">
+    <div class="stat-num">6+</div>
+    <div class="stat-label">Certifications</div>
+  </div>
+  <div class="stat-item fade-in fade-in-delay-2">
+    <div class="stat-num">4</div>
+    <div class="stat-label">GIS Platforms Mastered</div>
+  </div>
+  <div class="stat-item fade-in fade-in-delay-3">
+    <div class="stat-num">C2</div>
+    <div class="stat-label">English Proficiency</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div>
+    <div class="section-tag fade-in">About Me</div>
+    <h2 class="section-heading fade-in">Where data meets the <em>physical world</em></h2>
+    <div class="about-text fade-in">
+      <p>I'm a BCA graduate from Surana College, Bangalore, with a deep specialisation in GIS, remote sensing, and machine learning. My work sits at the intersection of geospatial technology and AI — building systems that make sense of Earth observation data at scale.</p>
+      <p>I've designed early warning systems for natural disasters, optimised drone flight paths using DEMs, and developed predictive models for rainfall and floods. Whether it's ArcGIS, QGIS, TensorFlow, or FastAPI — I work across the full stack of spatial intelligence.</p>
+      <p>I'm driven by impact: using satellite data and machine learning to solve real crises in environmental monitoring, urban planning, and disaster response.</p>
+    </div>
+  </div>
+  <div class="skills-grid" id="skillsGrid">
+    <div class="section-tag fade-in">Technical Skills</div>
+    <div class="skill-row fade-in">
+      <div class="skill-meta"><span class="skill-name">Python · TensorFlow · Scikit-learn</span><span class="skill-pct">95%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.95"></div></div>
+    </div>
+    <div class="skill-row fade-in fade-in-delay-1">
+      <div class="skill-meta"><span class="skill-name">ArcGIS · QGIS · Remote Sensing</span><span class="skill-pct">92%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.92"></div></div>
+    </div>
+    <div class="skill-row fade-in fade-in-delay-1">
+      <div class="skill-meta"><span class="skill-name">Machine Learning · Deep Learning</span><span class="skill-pct">90%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.90"></div></div>
+    </div>
+    <div class="skill-row fade-in fade-in-delay-2">
+      <div class="skill-meta"><span class="skill-name">SQL · Data Wrangling · Visualization</span><span class="skill-pct">88%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.88"></div></div>
+    </div>
+    <div class="skill-row fade-in fade-in-delay-2">
+      <div class="skill-meta"><span class="skill-name">Flask · Streamlit · FastAPI</span><span class="skill-pct">82%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.82"></div></div>
+    </div>
+    <div class="skill-row fade-in fade-in-delay-3">
+      <div class="skill-meta"><span class="skill-name">ERDAS · ENVI · SAR / SNAP</span><span class="skill-pct">80%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.80"></div></div>
+    </div>
+    <div class="skill-row fade-in fade-in-delay-3">
+      <div class="skill-meta"><span class="skill-name">Cloud Computing · MLOps · Git</span><span class="skill-pct">75%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="--w:0.75"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EXPERIENCE -->
+<section class="experience" id="experience">
+  <div class="section-tag fade-in">Work Experience</div>
+  <h2 class="section-heading fade-in">Where I've <em>contributed</em></h2>
+  <div class="exp-grid">
+    <div class="exp-date fade-in">Mar – Apr 2024<br>Münster, DE</div>
+    <div class="exp-content fade-in">
+      <div class="exp-role">Machine Learning Intern</div>
+      <div class="exp-company">Syslog Technologies · Bangalore</div>
+      <div class="exp-desc">
+        Led end-to-end ML workflows — from raw data collection and cleaning to model training, hyperparameter tuning, and production deployment. Built and evaluated regression and classification models using Python. Contributed to MLOps pipelines and collaborated cross-functionally with data scientists to align model objectives with business goals.
+      </div>
+      <div class="exp-tags">
+        <span class="tag">Scikit-learn</span>
+        <span class="tag">TensorFlow</span>
+        <span class="tag">Keras</span>
+        <span class="tag">Flask</span>
+        <span class="tag">Streamlit</span>
+        <span class="tag">FastAPI</span>
+        <span class="tag">Feature Engineering</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <div class="section-tag fade-in">Selected Projects</div>
+  <h2 class="section-heading fade-in">Systems I've <em>built</em></h2>
+  <div class="proj-grid">
+
+    <!-- 01 MARS ROVER -->
+    <div class="proj-card featured fade-in">
+      <div class="proj-num">01</div>
+      <div class="proj-cat">Deep Learning · Space · Autonomous Navigation</div>
+      <div class="proj-title">Mars Rover Terrain Navigation System</div>
+      <div class="proj-desc">
+        DeepLabV3+ semantic segmentation model trained on 16,604 NASA Mars EDR images for real-time autonomous rover navigation. Detects soil, rock, sky, and obstacles at 6–26 FPS on Apple MPS hardware. Implements live hazard avoidance logic (FORWARD / TURN / STOP) with obstacle threshold decision-making. Achieves F1-score of 0.52 after 5 training epochs with production-ready .pth checkpoint.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">DeepLabV3+</span>
+        <span class="tech-pill">PyTorch</span>
+        <span class="tech-pill">ResNet34</span>
+        <span class="tech-pill">NASA EDR</span>
+        <span class="tech-pill">Semantic Segmentation</span>
+        <span class="tech-pill">Apple MPS</span>
+      </div>
+      <div style="margin-top:18px">
+        <a href="https://github.com/Tilakkumar13/MarsRoverTerrainNav" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;border:1px solid var(--border);padding:5px 12px;letter-spacing:0.08em;">↗ VIEW ON GITHUB</a>
+      </div>
+    </div>
+
+    <!-- 02 NYC ACCIDENT -->
+    <div class="proj-card fade-in fade-in-delay-1">
+      <div class="proj-num">02</div>
+      <div class="proj-cat">Geospatial · ML · Full-Stack</div>
+      <div class="proj-title">NYC Accident Risk Intelligence</div>
+      <div class="proj-desc">
+        Full-stack geospatial system analysing NYC crash data with PostGIS spatial queries, hotspot detection, and an ML severity-risk predictor (LOW/MEDIUM/HIGH). Flask REST API with 9 endpoints, interactive Mapbox UI with 24-hour animation, risk shading grid, and real-time user report submission.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">PostGIS</span>
+        <span class="tech-pill">Flask</span>
+        <span class="tech-pill">Scikit-learn</span>
+        <span class="tech-pill">Mapbox GL JS</span>
+        <span class="tech-pill">PostgreSQL</span>
+        <span class="tech-pill">SQLAlchemy</span>
+      </div>
+    </div>
+
+    <!-- 03 NYC TRUCK ROUTING -->
+    <div class="proj-card fade-in fade-in-delay-2">
+      <div class="proj-num">03</div>
+      <div class="proj-cat">GIS · Web App · Logistics</div>
+      <div class="proj-title">NYC Truck Routing Platform</div>
+      <div class="proj-desc">
+        Web-based navigation platform generating truck-specific optimised routes across NYC, accounting for vehicle dimensions and local regulations. Integrates Google Maps API for real-time guidance, Stripe for payment processing, and GIS data for route accuracy.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">Node.js</span>
+        <span class="tech-pill">Express.js</span>
+        <span class="tech-pill">Google Maps API</span>
+        <span class="tech-pill">Stripe API</span>
+        <span class="tech-pill">GIS</span>
+      </div>
+    </div>
+
+    <!-- 04 LAND COVER -->
+    <div class="proj-card fade-in fade-in-delay-1">
+      <div class="proj-num">04</div>
+      <div class="proj-cat">Remote Sensing · Google Earth Engine</div>
+      <div class="proj-title">Land Cover Change Detection</div>
+      <div class="proj-desc">
+        Detects and quantifies land cover change between 2001 and 2020 using MODIS MCD12Q1 datasets in Google Earth Engine. Produces binary change maps, calculates impacted area in km², and exports cloud-optimised GeoTIFF outputs at 30m resolution across 17 land cover classes.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">Google Earth Engine</span>
+        <span class="tech-pill">MODIS</span>
+        <span class="tech-pill">JavaScript</span>
+        <span class="tech-pill">GeoTIFF</span>
+        <span class="tech-pill">Change Detection</span>
+      </div>
+    </div>
+
+    <!-- 05 COASTAL BLUE CARBON -->
+    <div class="proj-card fade-in fade-in-delay-2">
+      <div class="proj-num">05</div>
+      <div class="proj-cat">Climate · Remote Sensing · GEE</div>
+      <div class="proj-title">Coastal Blue Carbon Mapping — Sundarbans</div>
+      <div class="proj-desc">
+        Maps coastal vegetation and estimates carbon stock in the Sundarbans using Sentinel-2 and MODIS datasets in Google Earth Engine. Calculates NDVI, classifies vegetation types, and performs historical change detection — providing quantitative insights into blue carbon sequestration potential.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">Sentinel-2</span>
+        <span class="tech-pill">MODIS NDVI</span>
+        <span class="tech-pill">Google Earth Engine</span>
+        <span class="tech-pill">Carbon Stock</span>
+        <span class="tech-pill">NDVI</span>
+      </div>
+    </div>
+
+    <!-- 06 SOLAR SUITABILITY -->
+    <div class="proj-card fade-in fade-in-delay-1">
+      <div class="proj-num">06</div>
+      <div class="proj-cat">Renewable Energy · GEE · Spatial Analysis</div>
+      <div class="proj-title">Solar Suitability Score</div>
+      <div class="proj-desc">
+        Computes a composite solar suitability score for any geographical area using MODIS and Landsat data in Google Earth Engine. Analyses NDVI, land cover suitability, terrain slope, and solar radiation to identify optimal zones for solar energy installation and export results for planning.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">Google Earth Engine</span>
+        <span class="tech-pill">Landsat</span>
+        <span class="tech-pill">MODIS</span>
+        <span class="tech-pill">NDVI</span>
+        <span class="tech-pill">Solar Radiation</span>
+      </div>
+    </div>
+
+    <!-- 07 HURRICANE -->
+    <div class="proj-card fade-in fade-in-delay-2">
+      <div class="proj-num">07</div>
+      <div class="proj-cat">Climate · ML · Data Visualisation</div>
+      <div class="proj-title">Hurricane Wind Speed Prediction</div>
+      <div class="proj-desc">
+        Tracks hurricane routes and predicts wind speed from barometric pressure using linear regression on NOAA Atlantic hurricane data. Includes interactive path visualisation with Folium and Plotly, and end-to-end data preprocessing, modelling, and reporting pipeline.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">Python</span>
+        <span class="tech-pill">Scikit-learn</span>
+        <span class="tech-pill">Folium</span>
+        <span class="tech-pill">Plotly</span>
+        <span class="tech-pill">NOAA Data</span>
+        <span class="tech-pill">Pandas</span>
+      </div>
+    </div>
+
+    <!-- 08 LANDSLIDE EWS -->
+    <div class="proj-card fade-in fade-in-delay-1">
+      <div class="proj-num">08</div>
+      <div class="proj-cat">AI · Disaster Management · Philippines</div>
+      <div class="proj-title">AI Early Warning System for Landslides</div>
+      <div class="proj-desc">
+        As Data Analysis Lead, built an AI-driven landslide risk prediction system for disaster-prone regions of the Philippines. Led data preprocessing, feature engineering, and ML model training. Integrated with local disaster management frameworks to deliver real-time alerts, reducing evacuation response time.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">Machine Learning</span>
+        <span class="tech-pill">Python</span>
+        <span class="tech-pill">GIS</span>
+        <span class="tech-pill">Real-time Alerts</span>
+        <span class="tech-pill">Feature Engineering</span>
+      </div>
+    </div>
+
+    <!-- 09 RAINFALL -->
+    <div class="proj-card fade-in fade-in-delay-2">
+      <div class="proj-num">09</div>
+      <div class="proj-cat">Agriculture · Climate · ML</div>
+      <div class="proj-title">Rainfall Prediction Model</div>
+      <div class="proj-desc">
+        ML model predicting seasonal rainfall patterns from historical weather data. Regression algorithms identify key meteorological drivers affecting distribution — supporting agricultural planning and water resource management.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">Regression</span>
+        <span class="tech-pill">Python</span>
+        <span class="tech-pill">Pandas</span>
+        <span class="tech-pill">Matplotlib</span>
+      </div>
+    </div>
+
+    <!-- 10 TERRAIN LIDAR -->
+    <div class="proj-card fade-in fade-in-delay-1">
+      <div class="proj-num">10</div>
+      <div class="proj-cat">Remote Sensing · LiDAR · DEMs</div>
+      <div class="proj-title">Terrain Analysis for LiDAR Flight Optimisation</div>
+      <div class="proj-desc">
+        Analysed Digital Elevation Models to compute optimal flight altitudes and swath widths for LiDAR data capture over varied topography — enhancing accuracy and cost-efficiency of environmental and infrastructure remote sensing surveys.
+      </div>
+      <div class="proj-tech">
+        <span class="tech-pill">DEMs</span>
+        <span class="tech-pill">Jupyter</span>
+        <span class="tech-pill">LiDAR</span>
+        <span class="tech-pill">Terrain Analysis</span>
+        <span class="tech-pill">Python</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EDUCATION -->
+<section class="education" id="education">
+  <div class="section-tag fade-in">Education & Training</div>
+  <h2 class="section-heading fade-in">Where I've <em>learned</em></h2>
+  <div class="edu-grid" style="grid-template-columns: repeat(3,1fr);">
+    <div class="edu-card fade-in">
+      <div class="edu-type">Bachelor's Degree</div>
+      <div class="edu-title">Bachelor of Computer Applications (BCA)</div>
+      <div class="edu-org">Surana College · Bangalore University</div>
+      <div class="edu-period">2021 – 2024</div>
+    </div>
+    <div class="edu-card fade-in fade-in-delay-1">
+      <div class="edu-type">NASA Certification</div>
+      <div class="edu-title">Advanced Training: Drought Monitoring, Prediction & Projection</div>
+      <div class="edu-org">NASA ARSET</div>
+      <div class="edu-period">Aug – Sep 2024</div>
+    </div>
+    <div class="edu-card fade-in fade-in-delay-2">
+      <div class="edu-type">ESA / EO College</div>
+      <div class="edu-title">Winter-Water-Warming: Canadian SAR Applications</div>
+      <div class="edu-org">EO College</div>
+      <div class="edu-period">Jul – Aug 2024</div>
+    </div>
+    <div class="edu-card fade-in fade-in-delay-1">
+      <div class="edu-type">Certification</div>
+      <div class="edu-title">Classifying Objects Using Deep Learning in ArcGIS Pro</div>
+      <div class="edu-org">Esri</div>
+      <div class="edu-period">2024</div>
+    </div>
+    <div class="edu-card fade-in fade-in-delay-2">
+      <div class="edu-type">Certification</div>
+      <div class="edu-title">Machine Learning for Earth Observation</div>
+      <div class="edu-org">Online</div>
+      <div class="edu-period">2024</div>
+    </div>
+    <div class="edu-card fade-in fade-in-delay-1">
+      <div class="edu-type">Certification</div>
+      <div class="edu-title">Spatial Data Science with Earth Engine</div>
+      <div class="edu-org">Google / GEE</div>
+      <div class="edu-period">2024</div>
+    </div>
+    <div class="edu-card fade-in fade-in-delay-2">
+      <div class="edu-type">Certification</div>
+      <div class="edu-title">Cloud Computing with AWS</div>
+      <div class="edu-org">Amazon Web Services</div>
+      <div class="edu-period">2024</div>
+    </div>
+    <div class="edu-card fade-in fade-in-delay-1">
+      <div class="edu-type">Certification</div>
+      <div class="edu-title">Advanced Python Programming</div>
+      <div class="edu-org">Online</div>
+      <div class="edu-period">2023</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-left">
+    <div class="section-tag fade-in">Let's Connect</div>
+    <h2 class="section-heading fade-in">Ready to build something <em>remarkable?</em></h2>
+    <p style="color:#6b7a8d;font-size:13px;margin-top:20px;line-height:1.8" class="fade-in">
+      Open to full-time roles, research collaborations, and freelance projects in GIS, ML, and remote sensing. Based in Münster, Germany — available globally.
+    </p>
+  </div>
+  <div class="contact-links">
+    <a href="/cdn-cgi/l/email-protection#4a3e23262b21213f272b3864223c390a2d272b232664292527" class="contact-link fade-in">
+      <div>
+        <div class="contact-link-label">Email</div>
+        <div class="contact-link-value"><span class="__cf_email__" data-cfemail="cbbfa2a7aaa0a0bea6aab9e5a3bdb88baca6aaa2a7e5a8a4a6">[email&#160;protected]</span></div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+    <a href="tel:+919945591880" class="contact-link fade-in fade-in-delay-1">
+      <div>
+        <div class="contact-link-label">Phone</div>
+        <div class="contact-link-value">+91 99455 91880</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+    <a href="https://www.linkedin.com/in/tilak-kumar-726201262/" target="_blank" class="contact-link fade-in fade-in-delay-2">
+      <div>
+        <div class="contact-link-label">LinkedIn</div>
+        <div class="contact-link-value">tilak-kumar-726201262</div>
+      </div>
+      <div class="link-arrow">→</div>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-copy">© 2024 Tilak Kumar S H — All rights reserved</div>
+  <div class="footer-loc">
+    <span style="color:var(--accent)">●</span>
+    Münster, Germany · 51.9607° N, 7.6261° E
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const dot = cursor.querySelector('.cursor-dot');
+const ring = cursor.querySelector('.cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+function animCursor() {
+  rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('a, button, .proj-card, .stat-item, .edu-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { ring.style.transform = 'translate(-50%,-50%) scale(1.6)'; ring.style.borderColor = 'rgba(61,255,196,0.7)'; });
+  el.addEventListener('mouseleave', () => { ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.borderColor = 'rgba(61,255,196,0.4)'; });
+});
+
+// STARFIELD
+const canvas = document.getElementById('starfield');
+const ctx = canvas.getContext('2d');
+let stars = [];
+function initStars() {
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  stars = Array.from({length: 180}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.2,
+    o: Math.random() * 0.6 + 0.1,
+    s: Math.random() * 0.3 + 0.05,
+    d: Math.random() > 0.5 ? 1 : -1
+  }));
+}
+function drawStars() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s => {
+    s.o += s.s * s.d * 0.005;
+    if (s.o > 0.8 || s.o < 0.1) s.d *= -1;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,255,255,${s.o})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+initStars(); drawStars();
+window.addEventListener('resize', initStars);
+
+// INTERSECTION OBSERVER (fade-in + skill bars)
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (e.target.classList.contains('skill-fill')) {
+        e.target.style.width = (parseFloat(getComputedStyle(e.target).getPropertyValue('--w')) * 100) + '%';
+        e.target.classList.add('animate');
+      }
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Animate skill bars on scroll
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll('.skill-fill').forEach(bar => bar.classList.add('animate'));
+    }
+  });
+}, { threshold: 0.3 });
+const skillGrid = document.getEl
