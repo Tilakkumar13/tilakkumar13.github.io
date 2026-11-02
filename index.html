@@ -1,416 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Tilak Kumar S H — GIS · ML · Remote Sensing</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tilak Kumar S H · Geospatial data, computer vision, remote sensing</title>
+<meta name="description" content="MSc Geospatial Technologies student (Erasmus Mundus) at the University of Münster. I build tools that connect elevation and satellite data with computer vision and machine learning.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tilakkumar13.github.io/">
+<meta property="og:title" content="Tilak Kumar S H · Geospatial data, computer vision, remote sensing">
+<meta property="og:description" content="MSc Geospatial Technologies (Erasmus Mundus), University of Münster. Projects in GIS, remote sensing and machine learning, including Sand to Earth.">
+<meta property="og:image" content="https://tilakkumar13.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0a0e17">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;1,9..144,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #060810; --surface: #0d1120; --surface2: #131928;
-    --accent: #3dffc4; --accent2: #5b8fff;
-    --text: #e8eaf0; --muted: #6b7280; --border: rgba(61,255,196,0.12);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Mono', 'Courier New', monospace; font-size: 14px; overflow-x: hidden; cursor: none; }
-  .cursor { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; }
-  .cursor-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; transform: translate(-50%,-50%); }
-  .cursor-ring { width: 36px; height: 36px; border: 1px solid rgba(61,255,196,0.4); border-radius: 50%; transform: translate(-50%,-50%); transition: all 0.15s ease; position: absolute; top: 0; left: 0; }
-  body::before { content: ''; position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(61,255,196,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(61,255,196,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
-  #starfield { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 60px; backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); background: rgba(6,8,16,0.85); }
-  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px; color: var(--accent); }
-  .nav-links { display: flex; gap: 36px; list-style: none; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
-  .nav-links a:hover { color: var(--accent); }
-  .nav-status { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
-  .status-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(61,255,196,0.4)} 50%{box-shadow:0 0 0 6px rgba(61,255,196,0)} }
-  section { position: relative; z-index: 1; }
-  .hero { min-height: 100vh; display: flex; align-items: center; padding: 120px 60px 80px; position: relative; }
-  .hero-inner { max-width: 1100px; width: 100%; }
-  .hero-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 24px; display: flex; align-items: center; gap: 12px; }
-  .hero-label::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
-  .hero-name { font-family: 'Syne', Georgia, serif; font-weight: 800; font-size: clamp(52px, 8vw, 110px); line-height: 0.92; letter-spacing: -3px; margin-bottom: 8px; background: linear-gradient(135deg, #fff 0%, #a0b4c8 60%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .hero-title-line { font-family: 'Fraunces', Georgia, serif; font-weight: 300; font-style: italic; font-size: clamp(20px, 3vw, 36px); color: var(--muted); margin-bottom: 40px; letter-spacing: 1px; }
-  .hero-desc { max-width: 560px; color: #8b95a8; line-height: 1.8; font-size: 13px; margin-bottom: 52px; }
-  .hero-cta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-  .btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--accent); color: #060810; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; cursor: none; transition: all 0.2s; clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(61,255,196,0.25); }
-  .btn-secondary { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; cursor: none; transition: all 0.2s; }
-  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-  .hero-scroll { position: absolute; bottom: 40px; left: 60px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
-  .scroll-line { width: 1px; height: 48px; background: linear-gradient(to bottom, var(--accent), transparent); animation: scrollAnim 2s ease-in-out infinite; }
-  @keyframes scrollAnim { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(0.5)} }
-  .hero-coords { position: absolute; right: 60px; top: 50%; transform: translateY(-50%); text-align: right; font-size: 10px; color: rgba(61,255,196,0.3); letter-spacing: 0.1em; line-height: 2; }
-  .hero-coords span { display: block; }
-  .coord-accent { color: rgba(61,255,196,0.6); }
-  .hero::after { content: ''; position: absolute; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.3; animation: scanLine 6s linear infinite; pointer-events: none; }
-  @keyframes scanLine { 0%{top:0%} 100%{top:100%} }
-  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); position: relative; z-index: 1; }
-  .stat-item { padding: 40px 48px; background: var(--bg); transition: background 0.3s; }
-  .stat-item:hover { background: var(--surface); }
-  .stat-num { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 42px; color: var(--accent); line-height: 1; margin-bottom: 8px; }
-  .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
-  .section-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.2; margin: 0 60px; position: relative; z-index: 1; }
-  .section-tag { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-  .section-tag::before { content: '//'; opacity: 0.5; }
-  .section-heading { font-family: 'Syne', Georgia, serif; font-weight: 700; font-size: clamp(28px,3.5vw,44px); line-height: 1.1; letter-spacing: -1px; margin-bottom: 28px; }
-  .about { padding: 100px 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-  .about-text { color: #8b95a8; line-height: 1.9; font-size: 13px; }
-  .about-text p + p { margin-top: 16px; }
-  .skills-grid { display: flex; flex-direction: column; gap: 16px; }
-  .skill-row { display: flex; flex-direction: column; gap: 6px; }
-  .skill-meta { display: flex; justify-content: space-between; }
-  .skill-name { font-size: 12px; color: var(--text); }
-  .skill-pct { font-size: 11px; color: var(--accent); }
-  .skill-bar { height: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
-  .skill-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); width: 0; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
-  .experience { padding: 100px 60px; }
-  .exp-grid { display: grid; grid-template-columns: 200px 1fr; gap: 0; margin-top: 60px; }
-  .exp-date { font-size: 11px; color: var(--muted); padding-top: 4px; border-right: 1px solid var(--border); padding-right: 40px; }
-  .exp-content { padding-left: 40px; position: relative; }
-  .exp-content::before { content: ''; position: absolute; left: -5px; top: 7px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); box-shadow: 0 0 0 1px var(--accent); }
-  .exp-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px; margin-bottom: 4px; }
-  .exp-company { font-size: 12px; color: var(--accent); margin-bottom: 16px; }
-  .exp-desc { color: #8b95a8; font-size: 12px; line-height: 1.8; }
-  .exp-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-  .tag { padding: 4px 10px; border: 1px solid var(--border); font-size: 10px; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; }
-  .projects { padding: 100px 60px; }
-  .proj-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 2px; margin-top: 60px; }
-  .proj-card { padding: 40px; background: var(--surface); border: 1px solid transparent; transition: all 0.3s; position: relative; overflow: hidden; cursor: none; }
-  .proj-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(61,255,196,0.04), transparent 60%); opacity: 0; transition: opacity 0.3s; }
-  .proj-card:hover { border-color: var(--border); }
-  .proj-card:hover::before { opacity: 1; }
-  .proj-num { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; color: rgba(61,255,196,0.06); position: absolute; top: 20px; right: 24px; line-height: 1; }
-  .proj-cat { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
-  .proj-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; line-height: 1.3; margin-bottom: 14px; }
-  .proj-desc { color: #6b7a8d; font-size: 12px; line-height: 1.8; }
-  .proj-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
-  .tech-pill { padding: 3px 8px; background: rgba(91,143,255,0.08); color: var(--accent2); font-size: 10px; letter-spacing: 0.06em; border: 1px solid rgba(91,143,255,0.15); }
-  .proj-card.featured { grid-column: span 2; background: linear-gradient(135deg, var(--surface), rgba(61,255,196,0.03)); }
-  .gh-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; font-size: 11px; color: var(--accent); text-decoration: none; border: 1px solid var(--border); padding: 5px 12px; letter-spacing: 0.08em; transition: all 0.2s; }
-  .gh-link:hover { background: rgba(61,255,196,0.05); border-color: var(--accent); }
-  .education { padding: 100px 60px; }
-  .edu-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; margin-top: 60px; }
-  .edu-card { padding: 36px; background: var(--surface); border-top: 2px solid transparent; transition: all 0.3s; }
-  .edu-card:hover { border-top-color: var(--accent); background: var(--surface2); }
-  .edu-type { font-size: 10px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
-  .edu-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; line-height: 1.4; margin-bottom: 8px; }
-  .edu-org { font-size: 12px; color: var(--accent); margin-bottom: 6px; }
-  .edu-period { font-size: 11px; color: var(--muted); }
-  .contact { padding: 100px 60px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; border-top: 1px solid var(--border); }
-  .contact-links { display: flex; flex-direction: column; gap: 20px; }
-  .contact-link { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border: 1px solid var(--border); text-decoration: none; color: var(--text); transition: all 0.3s; cursor: none; }
-  .contact-link:hover { border-color: var(--accent); background: rgba(61,255,196,0.03); transform: translateX(4px); }
-  .contact-link-label { font-size: 11px; color: var(--muted); margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.1em; }
-  .contact-link-value { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 14px; }
-  .link-arrow { color: var(--accent); font-size: 18px; }
-  footer { padding: 32px 60px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
-  .footer-copy { font-size: 11px; color: var(--muted); }
-  .footer-loc { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
-  .glitch { position: relative; }
-  .glitch::after { content: attr(data-text); position: absolute; left: 2px; top: 0; color: var(--accent2); opacity: 0; clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%); animation: glitch 8s infinite 3s; }
-  @keyframes glitch { 0%,95%,100%{opacity:0;transform:translateX(0)} 96%{opacity:0.3;transform:translateX(-3px)} 97%{opacity:0} 98%{opacity:0.2;transform:translateX(3px)} }
-  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
-  .fade-in.visible { opacity: 1; transform: translateY(0); }
-  .fade-in-delay-1 { transition-delay: 0.12s; }
-  .fade-in-delay-2 { transition-delay: 0.24s; }
-  .fade-in-delay-3 { transition-delay: 0.36s; }
-  @media (max-width: 900px) {
-    nav { padding: 16px 24px; } .nav-links { display: none; }
-    .hero { padding: 100px 24px 60px; } .hero-coords, .hero-scroll { display: none; }
-    .about { padding: 60px 24px; grid-template-columns: 1fr; gap: 40px; }
-    .experience, .projects, .education { padding: 60px 24px; }
-    .contact { padding: 60px 24px; grid-template-columns: 1fr; }
-    .stats-row { grid-template-columns: repeat(2,1fr); }
-    .proj-grid { grid-template-columns: 1fr; }
-    .proj-card.featured { grid-column: span 1; }
-    .edu-grid { grid-template-columns: 1fr 1fr; }
-    .exp-grid { grid-template-columns: 1fr; }
-    .exp-date { border-right: none; border-bottom: 1px solid var(--border); padding: 0 0 12px; margin-bottom: 20px; }
-    .exp-content { padding-left: 0; } .exp-content::before { display: none; }
-    .section-divider { margin: 0 24px; }
-    footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px; }
-  }
-  @media (max-width: 560px) { .edu-grid { grid-template-columns: 1fr; } }
+:root {
+  --bg: #0a0e17; --surface: #111726; --surface-2: #161d2f; --line: #222b40;
+  --text: #e9edf3; --text-2: #b4bfcf; --text-3: #8592a6;
+  --accent: #3dffc4; --accent-ink: #062018; --blue: #7aa2ff;
+  --display: "Syne", "Helvetica Neue", Arial, sans-serif;
+  --sans: Inter, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --r: 14px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 400 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+/* nav */
+nav { position: sticky; top: 0; z-index: 20; background: rgba(10, 14, 23, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
+.logo { font: 800 18px var(--display); color: var(--text); margin-right: auto; letter-spacing: -0.01em; }
+.logo:hover { text-decoration: none; }
+nav .links a { color: var(--text-2); font-size: 15px; margin-left: 24px; }
+nav .links a:hover { color: var(--text); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; font: 600 15px var(--sans);
+  border: 1px solid var(--line); color: var(--text); background: var(--surface); transition: border-color .2s, background .2s; }
+.btn:hover { border-color: var(--text-3); text-decoration: none; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: #6dffd3; }
+.btn.small { padding: 8px 14px; font-size: 14px; }
+
+/* hero */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.topo { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.topo path { fill: none; stroke-linejoin: round; }
+.topo .c { stroke: rgba(61, 255, 196, .07); stroke-width: 1; }
+.topo .ix { stroke: rgba(61, 255, 196, .16); stroke-width: 1.6; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--bg) 25%, rgba(10,14,23,.6) 60%, rgba(10,14,23,.2)); pointer-events: none; }
+.hero .wrap { position: relative; z-index: 1; padding-top: 120px; padding-bottom: 110px; }
+.kicker { color: var(--accent); font-weight: 600; font-size: 16px; margin: 0 0 18px; }
+h1 { font: 800 clamp(48px, 8vw, 96px)/0.98 var(--display); letter-spacing: -0.03em; margin: 0 0 26px; }
+.hero .lead { max-width: 36em; font-size: 20px; line-height: 1.55; color: var(--text-2); margin: 0 0 36px; }
+.hero .lead strong { color: var(--text); font-weight: 600; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.facts { display: flex; gap: 34px; flex-wrap: wrap; margin-top: 56px; color: var(--text-3); font-size: 15px; }
+.facts b { display: block; color: var(--text); font-weight: 600; font-size: 16px; }
+
+/* sections */
+section.block { padding: 110px 0; border-bottom: 1px solid var(--line); }
+h2 { font: 700 clamp(32px, 4vw, 46px)/1.08 var(--display); letter-spacing: -0.02em; margin: 0 0 14px; }
+.sub { color: var(--text-3); margin: 0 0 48px; max-width: 40em; }
+
+/* featured project */
+.feature { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 0; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 20px; overflow: hidden; }
+.feature .media { position: relative; min-height: 380px; background: #000; display: grid; place-items: center; overflow: hidden; }
+.feature .media img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.feature .media .ph { position: relative; text-align: center; font: 800 44px/1 var(--display); letter-spacing: -0.02em;
+  background: linear-gradient(100deg, #f1d3a6, #d8a86f 30%, #7fb069 62%, #4c9be0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.feature .body { padding: 40px 40px 36px; }
+.tagline { color: var(--accent); font-size: 14px; font-weight: 600; margin: 0 0 10px; }
+.feature h3 { font: 700 34px/1.1 var(--display); letter-spacing: -0.02em; margin: 0 0 14px; }
+.feature p { color: var(--text-2); margin: 0 0 14px; }
+.feature ul { margin: 0 0 22px; padding-left: 18px; color: var(--text-2); }
+.feature li { margin: 4px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 24px; }
+.chip { font-size: 13px; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; }
+
+/* project grid */
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 28px 26px 26px; display: flex; flex-direction: column; }
+.card .area { color: var(--text-3); font-size: 13px; margin: 0 0 8px; }
+.card h3 { font: 700 21px/1.2 var(--display); letter-spacing: -0.01em; margin: 0 0 10px; }
+.card p { color: var(--text-2); font-size: 15.5px; margin: 0; }
+.card .chips { margin: 16px 0 0; }
+.card .links { margin-top: auto; padding-top: 18px; display: flex; gap: 18px; font-size: 15px; font-weight: 500; }
+.more-list { margin-top: 40px; border-top: 1px solid var(--line); }
+.more-list h3 { font: 600 17px var(--sans); color: var(--text-2); margin: 26px 0 8px; }
+.more-list ul { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 40px; }
+.more-list li { break-inside: avoid; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--text-3); font-size: 15px; }
+.more-list li b { color: var(--text); font-weight: 600; }
+
+/* experience */
+.timeline { display: grid; gap: 0; }
+.role { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; padding: 30px 0; border-top: 1px solid var(--line); }
+.role:last-child { border-bottom: 1px solid var(--line); }
+.role .when { color: var(--text-3); font-size: 15px; }
+.role h3 { font: 700 22px/1.2 var(--display); margin: 0 0 4px; }
+.role .org { color: var(--accent); font-size: 15px; margin: 0 0 10px; }
+.role p { color: var(--text-2); margin: 0; max-width: 42em; }
+
+/* skills */
+.skills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+.skill { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 24px; }
+.skill h3 { font: 600 16px var(--sans); margin: 0 0 12px; }
+.skill ul { list-style: none; margin: 0; padding: 0; color: var(--text-2); font-size: 15px; }
+.skill li { padding: 3px 0; }
+
+/* education */
+.edu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.edu .card h3 { font-size: 22px; }
+.certs { margin-top: 40px; }
+.certs h3 { font: 600 17px var(--sans); color: var(--text-2); margin: 0 0 8px; }
+.certs ul { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 40px; }
+.certs li { break-inside: avoid; padding: 9px 0; border-bottom: 1px solid var(--line); color: var(--text-2); font-size: 15px; }
+.certs li span { color: var(--text-3); }
+
+/* contact */
+.contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 60px; align-items: center; }
+.contact p { color: var(--text-2); max-width: 30em; }
+.clinks { display: grid; gap: 12px; }
+.clink { display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; border: 1px solid var(--line); border-radius: var(--r);
+  background: var(--surface); color: var(--text); transition: border-color .2s; }
+.clink:hover { border-color: var(--accent); text-decoration: none; }
+.clink small { display: block; color: var(--text-3); font-size: 13px; }
+.clink span:last-child { color: var(--accent); }
+footer { padding: 30px 0 40px; color: var(--text-3); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+@media (max-width: 960px) {
+  .feature { grid-template-columns: 1fr; }
+  .feature .media { min-height: 260px; }
+  .grid { grid-template-columns: 1fr 1fr; }
+  .skills { grid-template-columns: 1fr 1fr; }
+  .contact { grid-template-columns: 1fr; gap: 30px; }
+}
+@media (max-width: 680px) {
+  nav .links a:not(.btn) { display: none; }
+  .wrap { padding: 0 18px; }
+  .hero .wrap { padding-top: 80px; padding-bottom: 70px; }
+  .hero .lead { font-size: 18px; }
+  section.block { padding: 76px 0; }
+  .grid, .skills, .edu { grid-template-columns: 1fr; }
+  .feature .body { padding: 28px 22px; }
+  .role { grid-template-columns: 1fr; gap: 6px; }
+  .more-list ul, .certs ul { columns: 1; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .reveal { opacity: 1; transform: none; transition: none; } }
 </style>
 </head>
 <body>
 
-<canvas id="starfield"></canvas>
-<div class="cursor" id="cursor"><div class="cursor-dot"></div><div class="cursor-ring"></div></div>
-
-<nav>
-  <div class="nav-logo">TK.SH</div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <div class="nav-status"><div class="status-dot"></div>Available for opportunities</div>
+<nav aria-label="Main">
+  <div class="wrap">
+    <a class="logo" href="#top">Tilak Kumar</a>
+    <div class="links">
+      <a href="#work">Work</a><a href="#experience">Experience</a><a href="#skills">Skills</a><a href="#education">Education</a>
+      <a class="btn small primary" href="#contact">Contact</a>
+    </div>
+  </div>
 </nav>
 
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-label fade-in">GIS Specialist · ML Engineer · Remote Sensing</div>
-    <h1 class="hero-name glitch fade-in fade-in-delay-1" data-text="TILAK KUMAR">TILAK KUMAR</h1>
-    <div class="hero-name glitch fade-in fade-in-delay-1" data-text="S H" style="margin-bottom:24px">S H</div>
-    <div class="hero-title-line fade-in fade-in-delay-2">Mapping the Earth. Training the Machines.</div>
-    <p class="hero-desc fade-in fade-in-delay-2">I fuse geospatial intelligence with AI to build systems that understand our planet — from early warning systems for landslides, to predictive flood maps, to Mars rover terrain navigation.</p>
-    <div class="hero-cta fade-in fade-in-delay-3">
-      <a href="#projects" class="btn-primary">↓ View Projects</a>
-      <a href="#contact" class="btn-secondary">Get In Touch →</a>
+<header class="hero" id="top">
+  <svg class="topo" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M1397,0 L1410,2 L1430,3 L1450,1" class="c"/><path d="M730,217 L720,221 L710,233 L708,250 L710,261 L719,280 L726,290 L737,300 L750,309 L760,313 L780,315 L797,310 L807,300 L811,290 L810,271 L805,260 L798,250 L789,240 L776,230 L760,222 L750,218 L730,217" class="c"/><path d="M616,0 L630,10 L640,17 L650,23 L663,20 L672,10 L681,0" class="c"/><path d="M1263,0 L1266,20 L1268,40 L1268,60 L1267,80 L1266,100 L1268,120 L1276,130 L1290,132 L1300,130 L1320,124 L1330,120 L1350,112 L1360,108 L1380,100 L1390,97 L1408,90 L1420,85 L1435,80 L1450,75 L1465,70 L1480,65 L1496,60 L1510,55 L1527,50 L1540,45 L1555,40 L1570,34 L1580,30" class="c"/><path d="M1540,890 L1530,886 L1516,880 L1500,875 L1480,870 L1470,868 L1450,865 L1430,863 L1410,863 L1390,864 L1370,868 L1360,871 L1344,880 L1334,890" class="c"/><path d="M650,49 L644,60 L638,70 L630,86 L625,100 L620,115 L617,130 L614,150 L613,170 L614,190 L617,210 L620,223 L625,240 L630,253 L638,270 L643,280 L650,293 L660,308 L669,320 L677,330 L686,340 L697,350 L709,360 L720,368 L730,374 L741,380 L760,388 L770,391 L790,395 L810,396 L830,394 L846,390 L860,385 L870,380 L887,370 L900,360 L910,352 L920,341 L930,330 L936,320 L941,310 L946,290 L943,270 L939,260 L930,246 L920,234 L910,224 L900,215 L890,206 L880,198 L870,189 L858,180 L845,170 L832,160 L820,151 L810,144 L800,136 L790,129 L778,120 L764,110 L750,100 L740,92 L730,85 L720,78 L709,70 L694,60 L680,50 L670,43 L650,49" class="c"/><path d="M501,0 L510,14 L519,30 L523,40 L530,57 L534,70 L539,90 L541,100 L546,120 L550,140 L552,150 L557,170 L560,181 L566,200 L570,212 L577,230 L581,240 L590,259 L596,270 L601,280 L610,296 L619,310 L626,320 L633,330 L641,340 L650,351 L660,362 L670,372 L680,381 L691,390 L704,400 L719,410 L730,416 L740,422 L759,430 L770,434 L790,439 L800,441 L820,443 L840,443 L860,440 L870,438 L890,432 L900,428 L920,420 L930,415 L940,410 L960,400 L970,395 L980,390 L999,380 L1010,375 L1022,370 L1040,363 L1050,360 L1070,354 L1085,350 L1100,346 L1120,341 L1130,338 L1150,332 L1160,328 L1176,320 L1190,312 L1200,306 L1210,300 L1223,290 L1235,280 L1247,270 L1259,260 L1270,250 L1280,240 L1290,231 L1300,222 L1310,213 L1320,204 L1330,195 L1340,187 L1350,180 L1363,170 L1378,160 L1390,152 L1400,147 L1413,140 L1430,131 L1440,127 L1458,120 L1470,115 L1487,110 L1500,106 L1520,101 L1530,99 L1550,95 L1570,93 L1590,91" class="c"/><path d="M1183,0 L1183,20 L1180,35 L1176,50 L1170,64 L1162,80 L1155,90 L1147,100 L1139,110 L1129,120 L1118,130 L1105,140 L1090,150 L1080,155 L1069,160 L1050,166 L1030,169 L1010,169 L990,166 L970,160 L960,157 L945,150 L930,143 L920,137 L909,130 L894,120 L881,110 L870,101 L860,92 L850,82 L840,70 L832,60 L826,50 L820,37 L815,20 L813,0" class="c"/><path d="M1590,843 L1570,840 L1560,839 L1540,836 L1520,833 L1503,830 L1490,828 L1470,826 L1450,823 L1430,820 L1420,819 L1400,818 L1380,817 L1360,817 L1340,818 L1330,820 L1310,826 L1300,830 L1286,840 L1276,850 L1268,860 L1260,878 L1256,890" class="c"/><path d="M434,0 L442,10 L450,22 L460,39 L466,50 L471,60 L480,80 L484,90 L490,104 L496,120 L500,130 L508,150 L511,160 L519,180 L524,190 L530,205 L537,220 L542,230 L550,246 L557,260 L563,270 L570,283 L580,300 L587,310 L593,320 L600,330 L610,343 L620,356 L630,368 L640,379 L650,389 L660,399 L670,407 L680,416 L690,423 L700,431 L715,440 L730,449 L740,454 L752,460 L770,467 L780,471 L800,476 L818,480 L830,481 L850,482 L870,481 L880,480 L900,476 L920,470 L930,467 L950,460 L960,456 L976,450 L990,445 L1004,440 L1020,434 L1033,430 L1050,425 L1067,420 L1080,416 L1100,410 L1110,407 L1130,400 L1140,396 L1154,390 L1170,382 L1180,376 L1190,369 L1203,360 L1216,350 L1228,340 L1239,330 L1250,320 L1260,310 L1270,300 L1280,290 L1290,280 L1300,270 L1310,260 L1320,250 L1330,241 L1340,232 L1350,223 L1360,214 L1370,206 L1380,199 L1393,190 L1408,180 L1420,173 L1430,168 L1447,160 L1460,154 L1472,150 L1490,144 L1507,140 L1520,137 L1540,134 L1560,133 L1580,133" class="c"/><path d="M1088,0 L1084,20 L1080,30 L1070,44 L1060,53 L1050,60 L1030,69 L1020,71 L1000,71 L990,70 L970,64 L960,59 L948,50 L937,40 L930,30 L922,10" class="c"/><path d="M1590,805 L1570,805 L1550,804 L1530,802 L1510,800 L1500,799 L1480,797 L1460,795 L1440,792 L1427,790 L1410,788 L1390,785 L1370,783 L1350,781 L1337,780 L1320,780 L1310,780 L1290,783 L1270,789 L1260,794 L1250,800 L1239,810 L1230,820 L1220,836 L1214,850 L1210,862 L1206,880" class="c"/><path d="M370,0 L380,10 L390,21 L400,34 L410,47 L419,60 L425,70 L431,80 L440,96 L448,110 L453,120 L460,133 L469,150 L474,160 L480,172 L489,190 L495,200 L500,210 L510,228 L517,240 L522,250 L530,263 L540,280 L546,290 L553,300 L560,312 L570,326 L580,340 L587,350 L595,360 L603,370 L611,380 L620,390 L630,401 L640,410 L650,420 L662,430 L674,440 L688,450 L700,459 L710,465 L720,471 L736,480 L750,487 L760,492 L779,500 L790,504 L809,510 L820,513 L840,516 L860,518 L880,518 L900,517 L920,513 L936,510 L950,507 L970,501 L980,498 L1000,493 L1010,490 L1030,484 L1045,480 L1060,476 L1080,471 L1090,468 L1110,461 L1120,458 L1138,450 L1150,444 L1160,438 L1173,430 L1187,420 L1200,410 L1210,401 L1220,392 L1230,382 L1240,373 L1250,362 L1260,352 L1270,341 L1280,330 L1289,320 L1298,310 L1308,300 L1317,290 L1327,280 L1337,270 L1347,260 L1358,250 L1369,240 L1380,231 L1390,224 L1400,216 L1410,210 L1426,200 L1440,192 L1450,188 L1468,180 L1480,176 L1500,170 L1510,168 L1530,165 L1550,164 L1570,164 L1590,167" class="ix"/><path d="M0,116 L6,100 L10,90 L19,70 L24,60 L30,48 L40,30 L47,20 L54,10 L62,0" class="ix"/><path d="M1590,777 L1570,778 L1550,778 L1530,777 L1510,776 L1490,774 L1470,772 L1457,770 L1440,767 L1420,764 L1400,760 L1390,759 L1370,755 L1350,751 L1340,749 L1320,746 L1300,744 L1280,744 L1260,745 L1240,750 L1230,754 L1220,760 L1207,770 L1198,780 L1190,790 L1180,808 L1175,820 L1170,834 L1166,850 L1162,870 L1160,887" class="ix"/><path d="M43,890 L36,880 L28,870 L20,859 L10,846 L0,833" class="ix"/><path d="M286,0 L300,7 L310,14 L320,20 L332,30 L344,40 L355,50 L364,60 L373,70 L382,80 L390,91 L400,104 L410,118 L418,130 L425,140 L432,150 L440,163 L450,178 L457,190 L464,200 L470,210 L480,226 L489,240 L495,250 L502,260 L510,273 L520,289 L528,300 L534,310 L541,320 L550,333 L560,347 L570,360 L577,370 L585,380 L594,390 L603,400 L612,410 L622,420 L632,430 L643,440 L655,450 L667,460 L680,470 L690,477 L700,483 L710,490 L726,500 L740,508 L750,513 L763,520 L780,528 L790,532 L810,540 L820,543 L840,549 L850,551 L870,554 L890,555 L910,555 L930,554 L950,552 L961,550 L980,547 L1000,543 L1018,540 L1030,538 L1050,534 L1070,531 L1080,529 L1100,524 L1111,520 L1130,513 L1140,508 L1152,500 L1166,490 L1178,480 L1189,470 L1199,460 L1209,450 L1218,440 L1227,430 L1235,420 L1244,410 L1252,400 L1261,390 L1270,379 L1280,367 L1290,355 L1300,343 L1310,331 L1320,320 L1329,310 L1338,300 L1348,290 L1358,280 L1368,270 L1380,260 L1390,251 L1400,244 L1410,236 L1420,230 L1437,220 L1450,213 L1460,208 L1480,201 L1490,198 L1510,193 L1530,191 L1550,190 L1570,191 L1590,195" class="c"/><path d="M0,194 L7,180 L13,170 L20,156 L28,140 L34,130 L40,118 L50,101 L56,90 L63,80 L70,69 L80,56 L90,44 L100,34 L110,24 L120,16 L130,9 L146,0" class="c"/><path d="M1590,753 L1570,755 L1550,755 L1530,755 L1510,754 L1490,753 L1470,750 L1460,749 L1440,746 L1420,742 L1410,740 L1390,735 L1370,730 L1360,727 L1340,722 L1330,719 L1310,714 L1295,710 L1280,706 L1260,703 L1240,701 L1220,702 L1200,708 L1190,713 L1180,720 L1169,730 L1160,742 L1150,758 L1144,770 L1140,781 L1133,800 L1130,812 L1126,830 L1122,850 L1120,863 L1118,880" class="c"/><path d="M85,890 L76,880 L67,870 L57,860 L48,850 L39,840 L30,830 L20,819 L10,808 L0,797" class="c"/><path d="M0,243 L8,230 L14,220 L20,210 L30,194 L39,180 L46,170 L53,160 L60,149 L70,136 L80,123 L90,111 L100,100 L109,90 L120,80 L130,72 L140,65 L150,59 L168,50 L180,46 L200,41 L220,40 L240,42 L260,46 L271,50 L290,59 L300,64 L310,71 L323,80 L336,90 L347,100 L358,110 L367,120 L377,130 L386,140 L394,150 L402,160 L410,170 L420,182 L430,195 L440,209 L448,220 L455,230 L462,240 L470,251 L480,265 L490,279 L497,290 L504,300 L511,310 L520,323 L530,337 L540,350 L547,360 L555,370 L562,380 L570,390 L580,402 L590,413 L600,424 L610,434 L620,444 L630,453 L640,461 L650,470 L663,480 L677,490 L690,500 L700,506 L710,513 L721,520 L737,530 L750,538 L760,543 L772,550 L790,559 L800,564 L813,570 L830,577 L840,581 L860,587 L872,590 L890,594 L910,596 L930,598 L950,599 L970,599 L990,600 L1002,600 L1020,601 L1040,603 L1060,607 L1070,610 L1090,618 L1100,626 L1110,640 L1112,650 L1111,670 L1110,680 L1105,700 L1101,720 L1099,730 L1094,750 L1090,770 L1088,780 L1085,800 L1082,820 L1080,831 L1077,850 L1075,870 L1073,890" class="c"/><path d="M1590,731 L1570,734 L1550,735 L1530,735 L1510,735 L1490,733 L1470,731 L1460,729 L1440,726 L1420,721 L1410,719 L1390,713 L1380,710 L1360,703 L1350,699 L1330,692 L1320,688 L1303,680 L1290,674 L1280,669 L1261,660 L1250,654 L1240,649 L1224,640 L1210,631 L1200,623 L1190,613 L1183,600 L1182,580 L1188,560 L1192,550 L1200,533 L1206,520 L1212,510 L1220,495 L1229,480 L1235,470 L1242,460 L1250,447 L1260,432 L1268,420 L1275,410 L1282,400 L1290,390 L1300,376 L1310,363 L1320,351 L1329,340 L1337,330 L1346,320 L1355,310 L1365,300 L1376,290 L1387,280 L1398,270 L1410,261 L1420,254 L1430,247 L1443,240 L1460,231 L1470,227 L1490,221 L1500,218 L1520,214 L1540,213 L1560,214 L1580,218 L1590,220" class="c"/><path d="M135,890 L122,880 L110,871 L100,863 L90,854 L80,846 L70,837 L60,827 L50,818 L40,808 L30,798 L20,788 L10,777 L0,767" class="c"/><path d="M0,281 L7,270 L14,260 L20,250 L30,236 L40,222 L49,210 L57,200 L65,190 L73,180 L82,170 L91,160 L100,150 L111,140 L123,130 L136,120 L150,111 L160,106 L173,100 L190,95 L210,91 L230,91 L250,93 L270,99 L280,103 L295,110 L310,118 L320,125 L330,132 L341,140 L353,150 L364,160 L374,170 L384,180 L394,190 L403,200 L411,210 L420,220 L430,232 L440,245 L450,257 L460,270 L467,280 L475,290 L482,300 L490,311 L500,325 L510,339 L518,350 L526,360 L533,370 L541,380 L550,392 L560,404 L570,416 L580,427 L590,438 L600,448 L610,457 L620,467 L630,475 L640,484 L650,492 L661,500 L674,510 L688,520 L700,528 L710,535 L720,542 L732,550 L748,560 L760,568 L770,574 L780,580 L796,590 L810,598 L820,604 L832,610 L850,619 L860,624 L876,630 L890,635 L904,640 L920,645 L936,650 L950,655 L965,660 L980,667 L990,672 L1001,680 L1011,690 L1020,704 L1026,720 L1030,737 L1032,750 L1033,770 L1032,790 L1031,810 L1030,825 L1028,840 L1026,860 L1023,880" class="c"/><path d="M1590,711 L1570,714 L1550,716 L1530,717 L1510,717 L1490,715 L1470,713 L1455,710 L1440,707 L1420,702 L1410,699 L1390,692 L1380,688 L1361,680 L1350,675 L1340,669 L1323,660 L1310,651 L1300,644 L1290,636 L1280,627 L1270,617 L1260,603 L1253,590 L1249,580 L1245,560 L1246,540 L1249,520 L1252,510 L1259,490 L1263,480 L1270,465 L1277,450 L1283,440 L1290,428 L1300,412 L1308,400 L1314,390 L1322,380 L1330,369 L1340,356 L1350,343 L1360,332 L1370,321 L1380,311 L1390,301 L1400,293 L1410,284 L1420,277 L1430,270 L1446,260 L1460,253 L1470,249 L1490,242 L1500,239 L1520,236 L1540,235 L1560,236 L1578,240 L1590,244" class="c"/><path d="M213,890 L200,886 L184,880 L170,874 L160,869 L143,860 L130,852 L120,846 L110,839 L98,830 L85,820 L73,810 L61,800 L50,790 L40,780 L30,771 L20,760 L10,750 L1,740" class="c"/><path d="M0,315 L9,300 L16,290 L23,280 L30,270 L40,257 L50,244 L60,232 L70,220 L79,210 L89,200 L99,190 L110,181 L120,172 L130,165 L140,158 L155,150 L170,143 L180,139 L200,134 L220,132 L240,133 L260,136 L273,140 L290,146 L300,151 L316,160 L330,169 L340,176 L350,183 L360,192 L370,200 L380,210 L391,220 L401,230 L410,240 L420,251 L430,263 L440,275 L450,287 L460,300 L468,310 L476,320 L483,330 L491,340 L500,353 L510,366 L520,379 L528,390 L536,400 L544,410 L552,420 L561,430 L570,440 L580,451 L590,461 L600,470 L611,480 L622,490 L634,500 L647,510 L660,520 L670,528 L680,535 L690,542 L701,550 L715,560 L728,570 L740,578 L750,586 L760,593 L770,600 L783,610 L797,620 L810,630 L820,637 L830,645 L840,652 L851,660 L865,670 L879,680 L890,688 L900,695 L910,703 L920,711 L930,721 L940,732 L950,748 L956,760 L960,774 L963,790 L964,810 L963,830 L960,849 L957,860 L950,879 L944,890" class="c"/><path d="M1590,691 L1570,695 L1550,698 L1530,699 L1510,699 L1490,697 L1470,695 L1450,691 L1440,688 L1420,682 L1410,679 L1390,671 L1380,666 L1369,660 L1352,650 L1340,642 L1330,634 L1320,625 L1310,615 L1300,602 L1293,590 L1288,580 L1282,560 L1280,546 L1280,530 L1281,520 L1284,500 L1290,480 L1294,470 L1300,455 L1307,440 L1312,430 L1320,417 L1330,400 L1337,390 L1344,380 L1351,370 L1360,359 L1370,347 L1380,336 L1390,325 L1400,316 L1410,307 L1420,299 L1432,290 L1448,280 L1460,274 L1470,269 L1490,262 L1500,259 L1520,256 L1540,255 L1560,257 L1572,260 L1590,266" class="c"/><path d="M477,890 L460,887 L440,884 L420,881 L410,880 L390,878 L370,876 L350,875 L330,874 L310,873 L290,872 L270,870 L260,869 L240,866 L220,862 L210,859 L190,853 L180,849 L160,841 L150,836 L139,830 L122,820 L110,812 L100,805 L90,798 L80,790 L68,780 L56,770 L45,760 L35,750 L25,740 L16,730 L7,720" class="c"/><path d="M0,346 L10,330 L17,320 L23,310 L30,300 L40,287 L50,274 L60,262 L70,251 L80,241 L90,231 L100,222 L110,213 L120,205 L130,198 L143,190 L160,181 L170,177 L190,170 L200,168 L220,166 L240,166 L260,169 L270,172 L290,178 L300,183 L314,190 L330,199 L340,206 L350,213 L360,221 L371,230 L382,240 L392,250 L402,260 L412,270 L421,280 L430,290 L440,302 L450,314 L460,326 L470,339 L478,350 L486,360 L494,370 L501,380 L510,392 L520,404 L530,417 L540,429 L549,440 L558,450 L567,460 L577,470 L588,480 L598,490 L610,500 L620,509 L630,517 L640,525 L650,533 L660,540 L673,550 L686,560 L699,570 L710,579 L720,587 L730,595 L740,603 L750,611 L760,620 L771,630 L782,640 L792,650 L802,660 L812,670 L821,680 L830,691 L840,704 L850,718 L857,730 L862,740 L870,760 L873,770 L874,790 L871,810 L867,820 L860,831 L850,842 L839,850 L821,860 L810,864 L793,870 L780,873 L760,878 L748,880 L730,883 L710,885 L690,887 L670,888 L650,889 L630,889 L610,888 L590,887 L570,885 L550,882 L535,880 L520,878 L500,874 L480,870 L470,868 L450,865 L430,861 L420,860 L400,857 L380,855 L360,853 L340,851 L326,850 L310,849 L290,847 L270,845 L250,843 L234,840 L220,837 L200,832 L190,828 L170,821 L160,816 L147,810 L130,801 L120,795 L110,789 L98,780 L84,770 L72,760 L60,750 L50,741 L40,731 L30,721 L20,710 L12,700 L3,690" class="ix"/><path d="M1590,672 L1570,677 L1550,680 L1540,681 L1520,682 L1500,681 L1489,680 L1470,677 L1450,673 L1440,670 L1420,663 L1410,659 L1392,650 L1380,643 L1370,636 L1360,629 L1350,620 L1340,610 L1330,598 L1320,582 L1315,570 L1310,555 L1307,540 L1307,520 L1309,500 L1311,490 L1317,470 L1321,460 L1329,440 L1334,430 L1340,419 L1350,402 L1358,390 L1365,380 L1373,370 L1381,360 L1390,350 L1400,339 L1410,330 L1421,320 L1434,310 L1449,300 L1460,294 L1470,289 L1490,282 L1500,279 L1520,276 L1540,275 L1560,278 L1570,280 L1590,288" class="ix"/><path d="M0,378 L10,361 L16,350 L23,340 L30,329 L40,315 L50,302 L60,290 L69,280 L78,270 L88,260 L99,250 L110,241 L120,233 L130,226 L140,220 L159,210 L170,205 L186,200 L200,197 L220,194 L240,194 L260,197 L272,200 L290,206 L300,210 L320,220 L330,226 L340,232 L351,240 L364,250 L376,260 L387,270 L397,280 L407,290 L417,300 L426,310 L434,320 L443,330 L451,340 L460,351 L470,364 L480,377 L490,390 L498,400 L505,410 L513,420 L521,430 L530,441 L540,452 L550,464 L560,474 L570,484 L580,494 L590,503 L600,512 L610,521 L621,530 L634,540 L646,550 L659,560 L670,569 L680,577 L690,585 L700,593 L710,602 L720,611 L730,620 L740,630 L750,640 L760,651 L770,664 L780,677 L789,690 L794,700 L800,711 L807,730 L810,742 L812,760 L810,778 L807,790 L800,803 L790,816 L780,825 L770,832 L757,840 L740,848 L730,852 L710,858 L700,860 L680,864 L660,867 L640,868 L620,869 L600,868 L580,867 L560,865 L540,862 L526,860 L510,857 L490,853 L473,850 L460,847 L440,843 L421,840 L410,838 L390,835 L370,833 L350,831 L340,830 L320,828 L300,827 L280,825 L260,822 L245,820 L230,817 L210,812 L200,810 L180,803 L170,799 L150,790 L140,785 L130,779 L115,770 L100,760 L90,753 L80,745 L70,736 L60,728 L50,718 L40,708 L30,697 L20,685 L10,672 L2,660" class="c"/><path d="M1590,652 L1570,658 L1560,660 L1540,663 L1520,664 L1500,664 L1480,661 L1470,659 L1450,654 L1437,650 L1420,643 L1410,638 L1397,630 L1382,620 L1371,610 L1361,600 L1353,590 L1347,580 L1340,566 L1334,550 L1331,530 L1331,510 L1333,490 L1338,470 L1342,460 L1350,440 L1355,430 L1360,420 L1370,403 L1379,390 L1386,380 L1394,370 L1403,360 L1413,350 L1424,340 L1436,330 L1450,320 L1460,314 L1470,309 L1490,301 L1500,299 L1520,295 L1540,295 L1560,298 L1570,301 L1590,310" class="c"/><path d="M0,413 L6,400 L11,390 L20,374 L28,360 L35,350 L42,340 L50,329 L60,316 L70,305 L80,294 L90,284 L100,275 L110,266 L120,259 L132,250 L149,240 L160,235 L171,230 L190,224 L210,220 L220,219 L240,219 L250,220 L270,224 L289,230 L300,234 L312,240 L330,250 L340,256 L350,263 L360,270 L372,280 L383,290 L394,300 L404,310 L413,320 L422,330 L431,340 L440,350 L450,363 L460,375 L470,388 L479,400 L487,410 L494,420 L502,430 L510,440 L520,452 L530,464 L540,475 L550,486 L560,496 L570,506 L580,515 L590,524 L600,532 L610,541 L621,550 L634,560 L646,570 L658,580 L670,590 L680,599 L690,608 L700,617 L710,627 L720,638 L730,650 L738,660 L745,670 L751,680 L760,698 L765,710 L770,730 L771,740 L770,758 L767,770 L760,786 L750,800 L740,810 L730,817 L720,824 L707,830 L690,837 L679,840 L660,844 L640,847 L620,849 L600,849 L580,849 L560,847 L540,844 L520,841 L510,839 L490,835 L470,831 L460,829 L440,825 L420,821 L410,819 L390,816 L370,813 L350,811 L339,810 L320,808 L300,807 L280,805 L260,802 L245,800 L230,797 L210,792 L200,790 L180,783 L170,779 L150,770 L140,765 L130,759 L115,750 L101,740 L90,732 L80,724 L70,715 L60,705 L50,695 L40,684 L30,672 L21,660 L14,650 L8,640 L0,625" class="c"/><path d="M1590,632 L1570,639 L1560,642 L1540,645 L1520,647 L1500,646 L1480,643 L1466,640 L1450,635 L1437,630 L1420,621 L1410,615 L1400,608 L1390,599 L1380,588 L1370,574 L1362,560 L1359,550 L1354,530 L1353,510 L1354,490 L1359,470 L1362,460 L1370,440 L1375,430 L1380,420 L1390,404 L1400,390 L1408,380 L1417,370 L1427,360 L1439,350 L1450,342 L1460,335 L1470,330 L1490,321 L1500,318 L1520,315 L1540,315 L1560,319 L1570,323 L1586,330" class="c"/><path d="M0,458 L6,440 L10,429 L18,410 L23,400 L30,387 L40,370 L47,360 L54,350 L62,340 L70,330 L80,318 L90,308 L100,298 L110,290 L123,280 L138,270 L150,263 L160,258 L180,250 L190,247 L210,243 L230,242 L250,243 L270,246 L283,250 L300,256 L310,261 L327,270 L340,278 L350,285 L360,293 L370,301 L381,310 L391,320 L401,330 L411,340 L420,350 L430,362 L440,374 L450,386 L460,399 L468,410 L476,420 L484,430 L491,440 L500,451 L510,463 L520,475 L530,487 L540,498 L550,508 L560,518 L570,527 L580,536 L590,545 L600,553 L610,561 L620,570 L633,580 L644,590 L656,600 L667,610 L677,620 L687,630 L696,640 L704,650 L711,660 L720,674 L728,690 L732,700 L737,720 L738,740 L734,760 L729,770 L720,784 L710,794 L700,802 L688,810 L670,818 L660,821 L640,826 L620,829 L608,830 L590,830 L577,830 L560,829 L540,826 L520,823 L504,820 L490,817 L470,813 L458,810 L440,806 L420,802 L409,800 L390,797 L370,794 L350,792 L330,791 L320,790 L300,788 L280,786 L260,784 L240,780 L230,778 L210,774 L198,770 L180,764 L170,760 L150,751 L140,745 L130,740 L115,730 L101,720 L90,711 L80,703 L70,693 L60,683 L50,672 L41,660 L33,650 L27,640 L20,629 L10,610 L6,600 L0,582" class="c"/><path d="M1590,610 L1580,615 L1567,620 L1550,625 L1530,628 L1510,628 L1490,626 L1470,622 L1460,619 L1440,610 L1430,604 L1420,597 L1410,589 L1400,578 L1390,564 L1383,550 L1379,540 L1375,520 L1374,500 L1377,480 L1380,468 L1386,450 L1390,440 L1400,422 L1407,410 L1415,400 L1423,390 L1432,380 L1443,370 L1456,360 L1470,351 L1480,346 L1497,340 L1510,337 L1530,336 L1550,338 L1560,341 L1580,350 L1590,357" class="c"/><path d="M1590,585 L1580,591 L1562,600 L1550,604 L1530,608 L1510,608 L1490,606 L1470,601 L1460,597 L1447,590 L1433,580 L1422,570 L1414,560 L1408,550 L1400,530 L1398,520 L1396,500 L1398,480 L1401,470 L1407,450 L1412,440 L1420,426 L1430,411 L1439,400 L1449,390 L1460,381 L1470,374 L1480,369 L1500,361 L1510,359 L1530,358 L1546,360 L1560,364 L1571,370 L1585,380" class="c"/><path d="M190,268 L210,264 L230,263 L250,264 L270,267 L280,270 L300,277 L310,282 L325,290 L340,299 L350,306 L360,314 L370,322 L380,331 L390,340 L400,350 L410,361 L420,373 L430,385 L440,397 L450,410 L458,420 L465,430 L473,440 L481,450 L490,462 L500,475 L510,487 L520,499 L530,510 L540,520 L550,530 L560,540 L570,549 L580,558 L590,566 L600,575 L610,583 L620,592 L630,600 L641,610 L651,620 L661,630 L670,640 L680,653 L690,668 L696,680 L701,690 L706,710 L708,730 L703,750 L699,760 L690,773 L680,782 L669,790 L650,800 L640,803 L620,808 L604,810 L590,811 L570,811 L559,810 L540,808 L520,805 L500,801 L490,799 L470,794 L452,790 L440,787 L420,783 L400,780 L390,779 L370,776 L350,774 L330,772 L310,771 L300,770 L280,768 L260,766 L240,763 L228,760 L210,756 L192,750 L180,746 L166,740 L150,732 L140,727 L129,720 L114,710 L101,700 L90,691 L80,681 L70,671 L60,660 L52,650 L45,640 L39,630 L30,614 L23,600 L19,590 L13,570 L10,555 L8,540 L7,520 L8,500 L10,485 L13,470 L19,450 L22,440 L30,420 L35,410 L40,400 L50,383 L59,370 L66,360 L74,350 L82,340 L91,330 L102,320 L113,310 L126,300 L140,290 L150,284 L160,279 L180,271 L190,268" class="c"/><path d="M1590,553 L1580,563 L1570,570 L1550,580 L1540,583 L1520,586 L1500,585 L1480,580 L1470,576 L1459,570 L1447,560 L1437,550 L1430,539 L1423,520 L1420,501 L1420,496 L1421,480 L1427,460 L1431,450 L1440,434 L1450,420 L1459,410 L1470,401 L1480,394 L1490,389 L1510,383 L1530,382 L1550,387 L1560,391 L1573,400 L1583,410" class="ix"/><path d="M190,289 L210,284 L230,283 L250,284 L270,287 L281,290 L300,297 L310,302 L325,310 L340,319 L350,326 L360,334 L370,343 L380,352 L390,362 L400,372 L410,384 L420,395 L430,408 L439,420 L447,430 L455,440 L462,450 L470,461 L480,474 L490,487 L500,500 L509,510 L517,520 L526,530 L536,540 L546,550 L557,560 L568,570 L579,580 L590,589 L600,598 L610,607 L620,616 L630,626 L640,637 L650,649 L658,660 L664,670 L670,682 L676,700 L678,720 L674,740 L669,750 L660,761 L650,770 L631,780 L620,784 L600,788 L585,790 L570,790 L559,790 L540,788 L520,785 L500,781 L490,779 L470,775 L450,770 L440,768 L420,764 L400,761 L390,760 L370,758 L350,756 L330,755 L310,753 L290,752 L274,750 L260,748 L240,745 L220,741 L210,738 L190,732 L180,728 L162,720 L150,714 L140,708 L127,700 L114,690 L101,680 L91,670 L81,660 L72,650 L64,640 L57,630 L50,618 L41,600 L36,590 L30,571 L27,560 L24,540 L23,520 L24,500 L27,480 L30,466 L35,450 L40,436 L47,420 L52,410 L60,396 L70,381 L78,370 L86,360 L95,350 L105,340 L115,330 L128,320 L140,312 L150,305 L160,300 L180,292 L190,289" class="ix"/><path d="M190,308 L210,304 L230,302 L250,303 L270,306 L283,310 L300,316 L310,321 L326,330 L340,339 L350,347 L360,355 L370,364 L380,373 L390,384 L400,395 L410,407 L420,419 L428,430 L436,440 L443,450 L450,460 L460,473 L470,487 L480,500 L487,510 L495,520 L503,530 L512,540 L521,550 L530,560 L541,570 L551,580 L562,590 L573,600 L584,610 L594,620 L604,630 L613,640 L622,650 L630,662 L640,680 L643,690 L646,710 L641,730 L635,740 L624,750 L610,758 L600,762 L580,766 L560,767 L540,766 L520,764 L500,760 L490,758 L470,754 L451,750 L440,748 L420,744 L400,742 L383,740 L370,739 L350,738 L330,737 L310,736 L290,734 L270,732 L252,730 L240,728 L220,724 L207,720 L190,714 L179,710 L160,701 L150,696 L140,689 L126,680 L114,670 L103,660 L93,650 L84,640 L77,630 L70,620 L60,603 L54,590 L50,580 L44,560 L40,540 L39,530 L39,510 L40,498 L43,480 L48,460 L51,450 L59,430 L64,420 L70,409 L80,394 L90,380 L98,370 L107,360 L118,350 L130,340 L140,332 L150,326 L161,320 L180,312 L190,308" class="c"/><path d="M1500,415 L1520,411 L1540,415 L1551,420 L1564,430 L1572,440 L1580,455 L1584,470 L1586,490 L1582,510 L1578,520 L1570,533 L1560,543 L1549,550 L1530,557 L1510,558 L1490,554 L1480,549 L1467,540 L1459,530 L1450,511 L1448,500 L1449,480 L1451,470 L1460,450 L1467,440 L1477,430 L1490,420 L1500,415" class="c"/><path d="M190,328 L210,323 L230,321 L250,322 L270,325 L286,330 L300,336 L310,341 L326,350 L340,359 L350,367 L360,376 L370,385 L380,395 L390,406 L400,418 L409,430 L417,440 L424,450 L431,460 L440,473 L450,487 L459,500 L466,510 L473,520 L480,530 L490,543 L500,556 L510,568 L520,579 L530,590 L540,600 L550,610 L560,620 L570,630 L579,640 L587,650 L594,660 L600,670 L606,690 L605,710 L599,720 L587,730 L570,737 L550,740 L530,739 L510,737 L490,734 L470,730 L460,729 L440,725 L420,723 L400,721 L382,720 L370,719 L350,719 L330,718 L310,718 L290,717 L270,715 L250,713 L236,710 L220,706 L200,700 L190,697 L174,690 L160,683 L150,677 L140,670 L127,660 L116,650 L106,640 L97,630 L89,620 L80,606 L72,590 L67,580 L61,560 L58,550 L56,530 L55,510 L57,490 L60,476 L64,460 L70,445 L77,430 L82,420 L90,407 L100,393 L110,381 L120,371 L130,362 L140,354 L150,347 L161,340 L180,331 L190,328" class="c"/><path d="M1520,460 L1530,463 L1540,476 L1541,490 L1537,500 L1525,510 L1510,511 L1500,505 L1493,490 L1499,470 L1510,461 L1520,460" class="c"/><path d="M230,340 L241,340 L260,342 L280,347 L290,351 L310,360 L320,366 L330,373 L340,380 L352,390 L362,400 L372,410 L381,420 L390,431 L400,444 L410,458 L419,470 L425,480 L432,490 L440,503 L450,520 L457,530 L463,540 L470,551 L480,566 L489,580 L497,590 L504,600 L512,610 L520,621 L530,635 L540,650 L545,660 L548,680 L540,693 L522,700 L510,701 L490,702 L470,701 L457,700 L440,699 L420,698 L400,698 L380,699 L360,699 L340,699 L320,700 L300,699 L280,698 L260,696 L240,693 L225,690 L210,686 L193,680 L180,674 L170,669 L155,660 L141,650 L130,641 L120,631 L110,620 L102,610 L96,600 L90,590 L81,570 L78,560 L74,540 L72,520 L73,500 L76,480 L80,465 L86,450 L90,440 L100,422 L108,410 L116,400 L125,390 L135,380 L148,370 L160,362 L170,356 L183,350 L200,344 L220,341 L230,340" class="c"/><path d="M230,359 L250,360 L260,362 L280,367 L290,371 L309,380 L320,387 L330,394 L340,402 L350,411 L360,421 L370,432 L380,445 L390,458 L398,470 L404,480 L411,490 L420,506 L427,520 L433,530 L440,544 L448,560 L452,570 L460,588 L465,600 L470,619 L471,630 L470,640 L460,653 L448,660 L430,666 L410,670 L400,672 L380,674 L360,677 L340,679 L320,680 L310,680 L290,680 L280,680 L260,678 L240,675 L220,671 L210,668 L191,660 L180,655 L170,649 L156,640 L144,630 L133,620 L124,610 L117,600 L110,590 L100,570 L97,560 L92,540 L90,526 L90,510 L90,500 L94,480 L100,460 L104,450 L110,439 L120,423 L130,410 L140,400 L150,391 L160,384 L170,377 L184,370 L200,364 L220,360 L230,359" class="c"/><path d="M230,380 L246,380 L260,382 L280,387 L290,392 L306,400 L320,409 L330,417 L340,426 L350,437 L360,448 L369,460 L376,470 L383,480 L390,493 L399,510 L404,520 L410,535 L416,550 L420,566 L423,580 L423,600 L420,612 L410,627 L400,635 L390,641 L370,648 L360,651 L340,656 L320,659 L302,660 L290,660 L271,660 L260,659 L240,656 L220,651 L210,648 L191,640 L180,634 L170,627 L160,620 L149,610 L140,600 L130,586 L121,570 L117,560 L111,540 L109,530 L108,510 L110,495 L113,480 L120,461 L125,450 L131,440 L140,428 L150,417 L160,408 L170,400 L188,390 L200,386 L220,381 L230,380" class="ix"/><path d="M200,409 L220,403 L240,401 L260,404 L280,410 L290,415 L300,420 L314,430 L326,440 L336,450 L344,460 L352,470 L360,482 L370,500 L374,510 L380,524 L385,540 L388,560 L387,580 L380,599 L371,610 L360,618 L350,624 L335,630 L320,634 L300,637 L280,639 L260,638 L240,635 L220,630 L210,626 L197,620 L180,610 L170,602 L160,592 L150,580 L144,570 L139,560 L132,540 L130,528 L129,510 L130,500 L135,480 L140,467 L149,450 L157,440 L167,430 L179,420 L190,413 L200,409" class="c"/><path d="M220,429 L240,427 L260,429 L270,432 L288,440 L300,448 L310,457 L320,467 L330,479 L337,490 L342,500 L350,519 L353,530 L355,550 L351,570 L346,580 L338,590 L325,600 L310,607 L300,610 L280,613 L260,614 L240,611 L230,609 L210,601 L200,595 L190,588 L180,579 L170,567 L161,550 L157,540 L154,520 L155,500 L160,481 L166,470 L172,460 L181,450 L194,440 L210,432 L220,429" class="c"/><path d="M230,460 L250,459 L260,461 L279,470 L290,479 L300,490 L307,500 L311,510 L316,530 L314,550 L309,560 L299,570 L280,579 L270,581 L250,581 L240,580 L220,572 L210,565 L200,555 L190,540 L187,530 L186,510 L190,493 L198,480 L208,470 L220,463 L230,460" class="c"/></svg>
+  <div class="wrap">
+    <p class="kicker">Geospatial data · Computer vision · Remote sensing</p>
+    <h1>Tilak Kumar S H</h1>
+    <p class="lead">MSc student in <strong>Geospatial Technologies (Erasmus Mundus)</strong> at the University of Münster and research
+      assistant in computer vision. I build tools that connect elevation and satellite data with machine learning, most recently
+      <strong>Sand to Earth</strong>, which finds where a hand-sculpted landscape exists on the planet.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://tilakkumar13.github.io/sand2earth/">Open Sand to Earth</a>
+      <a class="btn" href="#work">See all work</a>
+    </div>
+    <div class="facts">
+      <span><b>Münster, Germany</b>Based</span>
+      <span><b>MSc 2025–2027</b>NOVA IMS Lisbon · Uni Münster</span>
+      <span><b>Open to internships</b>GIS, Earth observation, ML</span>
     </div>
   </div>
-  <div class="hero-coords">
-    <span class="coord-accent">// LOCATION</span><span>51.9607° N</span><span>7.6261° E</span>
-    <span style="margin-top:16px" class="coord-accent">// DOMAIN</span><span>GIS · ML · RS</span><span>BCA Graduate</span>
-    <span style="margin-top:16px" class="coord-accent">// STATUS</span><span>Open to Work</span>
+</header>
+
+<section class="block" id="work">
+  <div class="wrap">
+    <h2 class="reveal">Selected work</h2>
+    <p class="sub reveal">Projects from raw satellite or elevation data to something people can use.</p>
+
+    <article class="feature reveal">
+      <a class="media" href="https://tilakkumar13.github.io/sand2earth/" aria-label="Open Sand to Earth"><img src="sand2earth.png" alt="Sand to Earth: a sand sculpture on black, with the title in sand-to-earth colours" loading="lazy"></a>
+      <div class="body">
+        <p class="tagline">Featured · GIS × computer vision × deep learning</p>
+        <h3>Sand to Earth</h3>
+        <p>Sculpt a landscape in sand or clay, take one photo, and the tool finds where that shape exists on Earth.
+          A depth model turns the photo into a height map, which is searched against 88,531 windows of real terrain.</p>
+        <ul>
+          <li>Learned, rotation-invariant terrain matcher trained on a laptop CPU</li>
+          <li>89% top-1 on distorted copies of real terrain, in regions held out of training (simulated test)</li>
+          <li>Latitude-aware index that removes Web Mercator's polar bias</li>
+        </ul>
+        <div class="chips"><span class="chip">PyTorch</span><span class="chip">Depth Anything V2</span><span class="chip">Contrastive learning</span><span class="chip">DEMs</span><span class="chip">Sentinel-2</span><span class="chip">Three.js</span></div>
+        <div class="cta">
+          <a class="btn primary small" href="https://tilakkumar13.github.io/sand2earth/">Live site</a>
+          <a class="btn small" href="https://github.com/Tilakkumar13/sand2earth">Code on GitHub</a>
+        </div>
+      </div>
+    </article>
+
+    <div class="grid">
+      <article class="card reveal">
+        <p class="area">Deep learning · Planetary science</p>
+        <h3>Mars rover terrain segmentation</h3>
+        <p>DeepLabV3+ (ResNet34) trained on 16,604 NASA Mars images to label soil, rock, sky and obstacles, with simple
+          forward / turn / stop logic on top. Runs at 6–26 FPS; F1 0.52, with clear room to improve.</p>
+        <div class="chips"><span class="chip">PyTorch</span><span class="chip">Semantic segmentation</span><span class="chip">AI4Mars</span></div>
+        <div class="links"><a href="https://github.com/Tilakkumar13/MarsRoverTerrainNav">Code</a></div>
+      </article>
+      <article class="card reveal">
+        <p class="area">Climate · Live data</p>
+        <h3>El Niño live monitor</h3>
+        <p>A live ENSO dashboard on an OpenLayers map, pulling current ocean and weather data from the Open-Meteo API.</p>
+        <div class="chips"><span class="chip">OpenLayers</span><span class="chip">Open-Meteo</span><span class="chip">JavaScript</span></div>
+        <div class="links"><a href="https://github.com/Tilakkumar13/el-nino-live-monitor">Code</a></div>
+      </article>
+      <article class="card reveal">
+        <p class="area">Spatial databases · Full stack</p>
+        <h3>NYC accident risk intelligence</h3>
+        <p>PostGIS hotspot analysis of New York crash data, a severity-risk model, and a Mapbox interface with a 24-hour
+          animation and user reports, served by a Flask API.</p>
+        <div class="chips"><span class="chip">PostGIS</span><span class="chip">Flask</span><span class="chip">scikit-learn</span><span class="chip">Mapbox GL</span></div>
+      </article>
+      <article class="card reveal">
+        <p class="area">Remote sensing · Climate</p>
+        <h3>Blue carbon in the Sundarbans</h3>
+        <p>Mangrove mapping and carbon-stock estimation from Sentinel-2 and MODIS in Google Earth Engine, with NDVI-based
+          classification and historical change detection.</p>
+        <div class="chips"><span class="chip">Earth Engine</span><span class="chip">Sentinel-2</span><span class="chip">MODIS</span></div>
+      </article>
+      <article class="card reveal">
+        <p class="area">Disaster risk · Machine learning</p>
+        <h3>Landslide early warning, Philippines</h3>
+        <p>As data analysis lead, built the preprocessing, feature engineering and model training for a landslide-risk
+          prediction system for disaster-prone regions.</p>
+        <div class="chips"><span class="chip">Python</span><span class="chip">GIS</span><span class="chip">ML</span></div>
+      </article>
+      <article class="card reveal">
+        <p class="area">Remote sensing · Earth Engine</p>
+        <h3>Land cover change, 2001–2020</h3>
+        <p>Change detection across 17 land-cover classes from MODIS MCD12Q1 (500 m), with binary change maps, area
+          statistics in km² and Cloud-Optimised GeoTIFF export.</p>
+        <div class="chips"><span class="chip">Earth Engine</span><span class="chip">MODIS</span><span class="chip">COG</span></div>
+      </article>
+    </div>
+
+    <div class="more-list reveal">
+      <h3>Smaller projects</h3>
+      <ul>
+        <li><b>NYC truck routing.</b> Truck-specific routes that respect vehicle size and local rules (Node.js, Google Maps API).</li>
+        <li><b>Solar suitability score.</b> Composite index from NDVI, land cover, slope and radiation (Earth Engine, Landsat).</li>
+        <li><b>LiDAR flight planning.</b> DEM analysis for flight altitude and swath width over varied terrain.</li>
+        <li><b>Hurricane wind speed.</b> Regression on NOAA Atlantic data with interactive track maps.</li>
+        <li><b>Rainfall prediction.</b> Seasonal rainfall regression for agricultural planning.</li>
+        <li><b>GEE Starter Kit.</b> A published guide for getting started with Google Earth Engine.</li>
+      </ul>
+    </div>
   </div>
-  <div class="hero-scroll"><div class="scroll-line"></div>Scroll</div>
 </section>
 
-<div class="stats-row">
-  <div class="stat-item"><div class="stat-num">10+</div><div class="stat-label">Projects Shipped</div></div>
-  <div class="stat-item"><div class="stat-num">6+</div><div class="stat-label">Certifications</div></div>
-  <div class="stat-item"><div class="stat-num">4+</div><div class="stat-label">GIS Platforms</div></div>
-  <div class="stat-item"><div class="stat-num">C2</div><div class="stat-label">English Proficiency</div></div>
-</div>
-
-<section class="about" id="about">
-  <div>
-    <div class="section-tag fade-in">About Me</div>
-    <h2 class="section-heading fade-in">Where data meets the <em>physical world</em></h2>
-    <div class="about-text fade-in">
-      <p>I'm a BCA graduate from Surana College, Bangalore, now based in Münster, Germany — with a deep specialisation in GIS, remote sensing, and machine learning. My work sits at the intersection of geospatial technology and AI.</p>
-      <p>I've built AI systems for landslide early warning, deep learning navigation for Mars rovers, full-stack geospatial platforms for NYC crash analysis, and carbon mapping tools for the Sundarbans — all the way from raw satellite data to deployed web applications.</p>
-      <p>I'm driven by impact: using Earth observation data and machine learning to tackle real crises in environmental monitoring, urban planning, and disaster response.</p>
-    </div>
-  </div>
-  <div>
-    <div class="section-tag fade-in">Technical Skills</div>
-    <div class="skills-grid fade-in" id="skillsGrid">
-      <div class="skill-row"><div class="skill-meta"><span class="skill-name">Python · TensorFlow · Scikit-learn</span><span class="skill-pct">95%</span></div><div class="skill-bar"><div class="skill-fill" data-w="95"></div></div></div>
-      <div class="skill-row"><div class="skill-meta"><span class="skill-name">ArcGIS · QGIS · Remote Sensing</span><span class="skill-pct">92%</span></div><div class="skill-bar"><div class="skill-fill" data-w="92"></div></div></div>
-      <div class="skill-row"><div class="skill-meta"><span class="skill-name">Machine Learning · Deep Learning</span><span class="skill-pct">90%</span></div><div class="skill-bar"><div class="skill-fill" data-w="90"></div></div></div>
-      <div class="skill-row"><div class="skill-meta"><span class="skill-name">SQL · PostGIS · Data Analysis</span><span class="skill-pct">88%</span></div><div class="skill-bar"><div class="skill-fill" data-w="88"></div></div></div>
-      <div class="skill-row"><div class="skill-meta"><span class="skill-name">Google Earth Engine · MODIS · SAR</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" data-w="85"></div></div></div>
-      <div class="skill-row"><div class="skill-meta"><span class="skill-name">Flask · FastAPI · Streamlit</span><span class="skill-pct">82%</span></div><div class="skill-bar"><div class="skill-fill" data-w="82"></div></div></div>
-      <div class="skill-row"><div class="skill-meta"><span class="skill-name">Docker · AWS · MLOps · Git</span><span class="skill-pct">75%</span></div><div class="skill-bar"><div class="skill-fill" data-w="75"></div></div></div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<section class="experience" id="experience">
-  <div class="section-tag fade-in">Work Experience</div>
-  <h2 class="section-heading fade-in">Where I've <em>contributed</em></h2>
-  <div class="exp-grid">
-    <div class="exp-date fade-in">Mar – Apr 2024<br>Bangalore, IN</div>
-    <div class="exp-content fade-in">
-      <div class="exp-role">Machine Learning Intern</div>
-      <div class="exp-company">Syslog Technologies · Bangalore</div>
-      <div class="exp-desc">Worked on computer vision projects — developing and fine-tuning models for visual data using Python, OpenCV, and TensorFlow. Built end-to-end ML workflows from data preprocessing through model training, hyperparameter tuning, and deployment. Collaborated with data scientists to deliver production-ready solutions via Flask and FastAPI.</div>
-      <div class="exp-tags">
-        <span class="tag">Scikit-learn</span><span class="tag">TensorFlow</span><span class="tag">Keras</span><span class="tag">OpenCV</span><span class="tag">Flask</span><span class="tag">FastAPI</span>
+<section class="block" id="experience">
+  <div class="wrap">
+    <h2 class="reveal">Experience</h2>
+    <p class="sub reveal">Research, events and industry.</p>
+    <div class="timeline">
+      <div class="role reveal">
+        <div class="when">Aug 2026 – now<br>Münster, Germany</div>
+        <div>
+          <h3>Student research assistant (HiWi)</h3>
+          <p class="org">ReproTrack.MS · Computer Vision and Machine Learning Systems group, Institute for Geoinformatics, University of Münster</p>
+          <p>Research assistant on ReproTrack.MS, a computer vision project in Prof. Benjamin Risse's group.</p>
+        </div>
+      </div>
+      <div class="role reveal">
+        <div class="when">2026</div>
+        <div>
+          <h3>Organising team, GeoMundus 2026</h3>
+          <p class="org">International student conference on geospatial technologies</p>
+          <p>Part of the student team organising the GeoMundus conference.</p>
+        </div>
+      </div>
+      <div class="role reveal">
+        <div class="when">Mar – Apr 2024<br>Bangalore, India</div>
+        <div>
+          <h3>Machine learning intern</h3>
+          <p class="org">Syslog Technologies</p>
+          <p>Computer vision models in Python, OpenCV and TensorFlow, from preprocessing and training to tuning and serving
+            through Flask and FastAPI.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<div class="section-divider"></div>
-
-<section class="projects" id="projects">
-  <div class="section-tag fade-in">Selected Projects</div>
-  <h2 class="section-heading fade-in">Systems I've <em>built</em></h2>
-  <div class="proj-grid">
-
-    <div class="proj-card featured fade-in">
-      <div class="proj-num">01</div>
-      <div class="proj-cat">Deep Learning · Space · Autonomous Navigation</div>
-      <div class="proj-title">Mars Rover Terrain Navigation System</div>
-      <div class="proj-desc">DeepLabV3+ semantic segmentation trained on 16,604 NASA Mars EDR images for real-time autonomous rover navigation. Detects soil, rock, sky, and obstacles at 6–26 FPS. Live hazard avoidance logic (FORWARD / TURN / STOP) with obstacle threshold decision-making. F1-score: 0.52 with production-ready .pth checkpoint.</div>
-      <div class="proj-tech"><span class="tech-pill">DeepLabV3+</span><span class="tech-pill">PyTorch</span><span class="tech-pill">ResNet34</span><span class="tech-pill">NASA EDR</span><span class="tech-pill">Semantic Segmentation</span><span class="tech-pill">Apple MPS</span></div>
-      <a href="https://github.com/Tilakkumar13/MarsRoverTerrainNav" target="_blank" class="gh-link">↗ VIEW ON GITHUB</a>
+<section class="block" id="skills">
+  <div class="wrap">
+    <h2 class="reveal">Skills</h2>
+    <p class="sub reveal">Tools I use in real projects, grouped by what they're for.</p>
+    <div class="skills">
+      <div class="skill reveal"><h3>Geospatial</h3><ul><li>QGIS, ArcGIS Pro</li><li>Google Earth Engine</li><li>PostGIS, SQL</li><li>DEMs, LiDAR</li><li>OpenLayers, Leaflet, Mapbox GL</li></ul></div>
+      <div class="skill reveal"><h3>Remote sensing</h3><ul><li>Sentinel-2, Landsat</li><li>MODIS</li><li>SAR basics</li><li>Change detection</li><li>Cloud-Optimised GeoTIFF</li></ul></div>
+      <div class="skill reveal"><h3>ML and vision</h3><ul><li>Python, PyTorch</li><li>TensorFlow, scikit-learn</li><li>OpenCV</li><li>Segmentation</li><li>Contrastive learning</li></ul></div>
+      <div class="skill reveal"><h3>Building things</h3><ul><li>Flask, FastAPI, Streamlit</li><li>JavaScript, Three.js</li><li>Docker, Git</li><li>AWS basics</li><li>TouchDesigner</li></ul></div>
     </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">02</div>
-      <div class="proj-cat">Geospatial · ML · Full-Stack</div>
-      <div class="proj-title">NYC Accident Risk Intelligence</div>
-      <div class="proj-desc">Full-stack geospatial system analysing NYC crash data with PostGIS spatial queries, hotspot detection, and ML severity-risk predictor (LOW/MEDIUM/HIGH). Flask REST API with 9 endpoints, Mapbox UI with 24-hour animation and real-time user report submission.</div>
-      <div class="proj-tech"><span class="tech-pill">PostGIS</span><span class="tech-pill">Flask</span><span class="tech-pill">Scikit-learn</span><span class="tech-pill">Mapbox GL JS</span><span class="tech-pill">PostgreSQL</span></div>
-    </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">03</div>
-      <div class="proj-cat">GIS · Web App · Logistics</div>
-      <div class="proj-title">NYC Truck Routing Platform</div>
-      <div class="proj-desc">Web-based navigation platform generating truck-specific optimised routes across NYC, accounting for vehicle dimensions and local regulations. Integrates Google Maps API for real-time guidance and Stripe for payment processing.</div>
-      <div class="proj-tech"><span class="tech-pill">Node.js</span><span class="tech-pill">Express.js</span><span class="tech-pill">Google Maps API</span><span class="tech-pill">Stripe</span><span class="tech-pill">GIS</span></div>
-    </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">04</div>
-      <div class="proj-cat">Remote Sensing · Google Earth Engine</div>
-      <div class="proj-title">Land Cover Change Detection</div>
-      <div class="proj-desc">Detects and quantifies land cover change between 2001–2020 using MODIS MCD12Q1 in Google Earth Engine. Binary change maps, area calculations in km², and cloud-optimised GeoTIFF export at 30m resolution across 17 land cover classes.</div>
-      <div class="proj-tech"><span class="tech-pill">Google Earth Engine</span><span class="tech-pill">MODIS</span><span class="tech-pill">JavaScript</span><span class="tech-pill">GeoTIFF</span></div>
-    </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">05</div>
-      <div class="proj-cat">Climate · Remote Sensing · Carbon</div>
-      <div class="proj-title">Coastal Blue Carbon Mapping — Sundarbans</div>
-      <div class="proj-desc">Maps coastal vegetation and estimates carbon stock in the Sundarbans using Sentinel-2 and MODIS in Google Earth Engine. Calculates NDVI, classifies vegetation, and performs historical change detection for blue carbon sequestration analysis.</div>
-      <div class="proj-tech"><span class="tech-pill">Sentinel-2</span><span class="tech-pill">MODIS NDVI</span><span class="tech-pill">Google Earth Engine</span><span class="tech-pill">Carbon Stock</span></div>
-    </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">06</div>
-      <div class="proj-cat">Renewable Energy · GEE · Spatial Analysis</div>
-      <div class="proj-title">Solar Suitability Score</div>
-      <div class="proj-desc">Computes a composite solar suitability score using MODIS and Landsat in GEE. Analyses NDVI, land cover, terrain slope, and solar radiation to identify optimal zones for solar energy installation.</div>
-      <div class="proj-tech"><span class="tech-pill">Google Earth Engine</span><span class="tech-pill">Landsat</span><span class="tech-pill">MODIS</span><span class="tech-pill">Solar Radiation</span></div>
-    </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">07</div>
-      <div class="proj-cat">Climate · ML · Data Visualisation</div>
-      <div class="proj-title">Hurricane Wind Speed Prediction</div>
-      <div class="proj-desc">Tracks hurricane routes and predicts wind speed from barometric pressure using linear regression on NOAA Atlantic hurricane data. Interactive path visualisation with Folium and Plotly.</div>
-      <div class="proj-tech"><span class="tech-pill">Python</span><span class="tech-pill">Scikit-learn</span><span class="tech-pill">Folium</span><span class="tech-pill">Plotly</span><span class="tech-pill">NOAA</span></div>
-    </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">08</div>
-      <div class="proj-cat">AI · Disaster Management · Philippines</div>
-      <div class="proj-title">AI Early Warning System for Landslides</div>
-      <div class="proj-desc">As Data Analysis Lead, built an AI-driven landslide risk prediction system for disaster-prone regions of the Philippines. Led preprocessing, feature engineering, and model training. Integrated with disaster management frameworks for real-time alerts.</div>
-      <div class="proj-tech"><span class="tech-pill">Machine Learning</span><span class="tech-pill">Python</span><span class="tech-pill">GIS</span><span class="tech-pill">Real-time Alerts</span></div>
-    </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">09</div>
-      <div class="proj-cat">Agriculture · Climate · ML</div>
-      <div class="proj-title">Rainfall Prediction Model</div>
-      <div class="proj-desc">ML model predicting seasonal rainfall patterns from historical weather data. Regression algorithms identify key meteorological drivers — supporting agricultural planning and water resource management.</div>
-      <div class="proj-tech"><span class="tech-pill">Regression</span><span class="tech-pill">Python</span><span class="tech-pill">Pandas</span><span class="tech-pill">Matplotlib</span></div>
-    </div>
-
-    <div class="proj-card fade-in">
-      <div class="proj-num">10</div>
-      <div class="proj-cat">Remote Sensing · LiDAR · DEMs</div>
-      <div class="proj-title">Terrain Analysis for LiDAR Flight Optimisation</div>
-      <div class="proj-desc">Analysed Digital Elevation Models to compute optimal flight altitudes and swath widths for LiDAR data capture over varied topography — enhancing accuracy and cost-efficiency of environmental and infrastructure surveys.</div>
-      <div class="proj-tech"><span class="tech-pill">DEMs</span><span class="tech-pill">Jupyter</span><span class="tech-pill">LiDAR</span><span class="tech-pill">Python</span></div>
-    </div>
-
   </div>
 </section>
 
-<div class="section-divider"></div>
-
-<section class="education" id="education">
-  <div class="section-tag fade-in">Education &amp; Certifications</div>
-  <h2 class="section-heading fade-in">Where I've <em>learned</em></h2>
-  <div class="edu-grid">
-    <div class="edu-card fade-in"><div class="edu-type">Bachelor's Degree</div><div class="edu-title">Bachelor of Computer Applications (BCA)</div><div class="edu-org">Surana College · Bangalore University</div><div class="edu-period">2021 – 2024</div></div>
-    <div class="edu-card fade-in"><div class="edu-type">NASA Certification</div><div class="edu-title">Drought Monitoring, Prediction &amp; Projection</div><div class="edu-org">NASA ARSET</div><div class="edu-period">Aug – Sep 2024</div></div>
-    <div class="edu-card fade-in"><div class="edu-type">ESA / EO College</div><div class="edu-title">Winter-Water-Warming: Canadian SAR Applications</div><div class="edu-org">EO College</div><div class="edu-period">Jul – Aug 2024</div></div>
-    <div class="edu-card fade-in"><div class="edu-type">Certification</div><div class="edu-title">Deep Learning Object Classification in ArcGIS Pro</div><div class="edu-org">Esri</div><div class="edu-period">2024</div></div>
-    <div class="edu-card fade-in"><div class="edu-type">Certification</div><div class="edu-title">Machine Learning for Earth Observation</div><div class="edu-org">Online</div><div class="edu-period">2024</div></div>
-    <div class="edu-card fade-in"><div class="edu-type">Certification</div><div class="edu-title">Spatial Data Science with Earth Engine</div><div class="edu-org">Google / GEE</div><div class="edu-period">2024</div></div>
-    <div class="edu-card fade-in"><div class="edu-type">Certification</div><div class="edu-title">Cloud Computing with AWS</div><div class="edu-org">Amazon Web Services</div><div class="edu-period">2024</div></div>
-    <div class="edu-card fade-in"><div class="edu-type">Certification</div><div class="edu-title">Advanced Python Programming</div><div class="edu-org">Online</div><div class="edu-period">2023</div></div>
+<section class="block" id="education">
+  <div class="wrap">
+    <h2 class="reveal">Education</h2>
+    <p class="sub reveal">Two degrees, three cities.</p>
+    <div class="edu">
+      <article class="card reveal">
+        <p class="area">Sep 2025 – Mar 2027 (expected)</p>
+        <h3>MSc Geospatial Technologies</h3>
+        <p>Erasmus Mundus joint master's. First semester at NOVA IMS, Universidade NOVA de Lisboa; continuing at the
+          Institute for Geoinformatics, University of Münster.</p>
+      </article>
+      <article class="card reveal">
+        <p class="area">2021 – 2024</p>
+        <h3>Bachelor of Computer Applications</h3>
+        <p>Surana College, Bangalore University.</p>
+      </article>
+    </div>
+    <div class="certs reveal">
+      <h3>Certificates</h3>
+      <ul>
+        <li>Drought Monitoring, Prediction and Projection <span>· NASA ARSET</span></li>
+        <li>Invasive Species Monitoring <span>· NASA ARSET</span></li>
+        <li>Open Science 101 <span>· NASA</span></li>
+        <li>Machine Learning for Earth Observation <span>· EO College</span></li>
+        <li>Basic Principles of Radar Backscatter <span>· EO College</span></li>
+        <li>Winter-Water-Warming: Canadian SAR Applications <span>· EO College</span></li>
+        <li>Deep Learning Object Classification in ArcGIS Pro <span>· Esri</span></li>
+        <li>Going Places with Spatial Analysis <span>· Esri</span></li>
+        <li>Getting Started with Imagery and Remote Sensing <span>· Esri</span></li>
+        <li>Downscaling a Prediction Model with ArcGIS Notebooks <span>· Esri</span></li>
+      </ul>
+    </div>
   </div>
 </section>
 
-<div class="section-divider"></div>
-
-<section class="contact" id="contact">
-  <div>
-    <div class="section-tag fade-in">Let's Connect</div>
-    <h2 class="section-heading fade-in">Ready to build something <em>remarkable?</em></h2>
-    <p style="color:#6b7a8d;font-size:13px;margin-top:20px;line-height:1.8" class="fade-in">Open to full-time roles, research collaborations, and freelance projects in GIS, ML, and remote sensing. Based in Münster, Germany — available globally.</p>
-  </div>
-  <div class="contact-links fade-in">
-    <a href="mailto:tilakkumar.hvs@gmail.com" class="contact-link"><div><div class="contact-link-label">Email</div><div class="contact-link-value">tilakkumar.hvs@gmail.com</div></div><div class="link-arrow">→</div></a>
-    <a href="tel:+919945591880" class="contact-link"><div><div class="contact-link-label">Phone</div><div class="contact-link-value">+91 99455 91880</div></div><div class="link-arrow">→</div></a>
-    <a href="https://www.linkedin.com/in/tilak-kumar-726201262/" target="_blank" class="contact-link"><div><div class="contact-link-label">LinkedIn</div><div class="contact-link-value">tilak-kumar-726201262</div></div><div class="link-arrow">→</div></a>
-    <a href="https://github.com/Tilakkumar13" target="_blank" class="contact-link"><div><div class="contact-link-label">GitHub</div><div class="contact-link-value">Tilakkumar13</div></div><div class="link-arrow">→</div></a>
+<section class="block" id="contact">
+  <div class="wrap contact">
+    <div class="reveal">
+      <h2>Let's talk.</h2>
+      <p>Looking for internships and research collaborations in GIS, Earth observation and machine learning, in Germany and beyond.</p>
+    </div>
+    <div class="clinks reveal">
+      <a class="clink" href="mailto:tilakkumar.hvs@gmail.com"><span><small>Email</small>tilakkumar.hvs@gmail.com</span><span>Write</span></a>
+      <a class="clink" href="https://www.linkedin.com/in/tilak-kumar-726201262/"><span><small>LinkedIn</small>Tilak Kumar</span><span>Connect</span></a>
+      <a class="clink" href="https://github.com/Tilakkumar13"><span><small>GitHub</small>Tilakkumar13</span><span>Follow</span></a>
+    </div>
   </div>
 </section>
 
-<footer>
-  <div class="footer-copy">© 2025 Tilak Kumar S H — All rights reserved</div>
-  <div class="footer-loc"><span style="color:var(--accent)">●</span> Münster, Germany · 51.9607° N, 7.6261° E</div>
-</footer>
+<footer><div class="wrap"><span>© 2026 Tilak Kumar S H</span><span>Münster, Germany · 51.96° N, 7.63° E</span></div></footer>
 
 <script>
-// CURSOR
-const cursor = document.getElementById('cursor');
-const dot = cursor.querySelector('.cursor-dot');
-const ring = cursor.querySelector('.cursor-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-(function animC() { rx += (mx-rx)*0.18; ry += (my-ry)*0.18; dot.style.left=mx+'px'; dot.style.top=my+'px'; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animC); })();
-document.querySelectorAll('a,button,.proj-card,.stat-item,.edu-card').forEach(el => {
-  el.addEventListener('mouseenter', () => { ring.style.transform='translate(-50%,-50%) scale(1.6)'; ring.style.borderColor='rgba(61,255,196,0.7)'; });
-  el.addEventListener('mouseleave', () => { ring.style.transform='translate(-50%,-50%) scale(1)'; ring.style.borderColor='rgba(61,255,196,0.4)'; });
-});
-
-// STARFIELD
-const canvas = document.getElementById('starfield');
-const ctx = canvas.getContext('2d');
-let stars = [];
-function initStars() {
-  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-  stars = Array.from({length:200}, () => ({ x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.2+0.2, o:Math.random()*0.6+0.1, s:Math.random()*0.3+0.05, d:Math.random()>0.5?1:-1 }));
-}
-(function drawS() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  stars.forEach(s => { s.o+=s.s*s.d*0.005; if(s.o>0.8||s.o<0.1)s.d*=-1; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fillStyle=`rgba(255,255,255,${s.o})`; ctx.fill(); });
-  requestAnimationFrame(drawS);
+(() => {
+  const els = document.querySelectorAll(".reveal");
+  if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) { els.forEach(e => e.classList.add("in")); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
+  els.forEach(e => io.observe(e));
 })();
-initStars();
-window.addEventListener('resize', initStars);
-
-// FADE IN on scroll
-const fadeEls = document.querySelectorAll('.fade-in');
-const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.08 });
-fadeEls.forEach(el => io.observe(el));
-
-// Hero — show immediately on load
-window.addEventListener('load', () => {
-  document.querySelectorAll('.hero .fade-in').forEach((el, i) => {
-    setTimeout(() => el.classList.add('visible'), i * 120);
-  });
-});
-
-// SKILL BARS
-const skillsGrid = document.getElementById('skillsGrid');
-if (skillsGrid) {
-  const so = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.currentTarget.querySelectorAll('.skill-fill').forEach(bar => {
-          bar.style.width = bar.getAttribute('data-w') + '%';
-        });
-        so.unobserve(e.currentTarget);
-      }
-    });
-  }, { threshold: 0.2 });
-  so.observe(skillsGrid);
-}
 </script>
 </body>
 </html>
