@@ -8,7 +8,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://tilakkumar13.github.io/">
 <meta property="og:title" content="Tilak Kumar S H · GIS · Computer Vision · Remote Sensing">
-<meta property="og:description" content="MSc Geospatial Technologies (Erasmus Mundus), University of Münster. Projects in GIS, remote sensing and machine learning, including Sand to Earth.">
+<meta property="og:description" content="MSc Geospatial Technologies (Erasmus Mundus), University of Münster. Projects in GIS, remote sensing and machine learning, including Sand to Planet.">
 <meta property="og:image" content="https://tilakkumar13.github.io/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#060810">
@@ -284,9 +284,9 @@
       <div class="hero-title-line fade-in d2">Mapping the Earth. Training the machines.</div>
       <p class="hero-desc fade-in d2">MSc student in <strong>Geospatial Technologies (Erasmus Mundus)</strong> at the University of Münster and
         student research assistant in computer vision. I build systems that connect elevation and satellite data with machine
-        learning, most recently <strong>Sand to Earth</strong>, which finds where a hand-sculpted landscape exists on the planet.</p>
+        learning, most recently <strong>Sand to Planet</strong>, which finds where a hand-sculpted landscape exists on Earth or Mars.</p>
       <div class="hero-cta fade-in d3">
-        <a href="https://tilakkumar13.github.io/sand2earth/" class="btn-primary">↗ Open Sand to Earth</a>
+        <a href="https://tilakkumar13.github.io/sand2planet/" class="btn-primary">↗ Open Sand to Planet</a>
         <a href="#projects" class="btn-secondary">↓ View projects</a>
       </div>
     </div>
@@ -309,7 +309,7 @@
 </section>
 
 <div class="stats-row">
-  <div class="stat-item"><div class="stat-num">69%</div><div class="stat-label">Realistic match rate<br>Sand to Earth</div></div>
+  <div class="stat-item"><div class="stat-num">69%</div><div class="stat-label">Realistic match rate<br>Sand to Planet (Earth)</div></div>
   <div class="stat-item"><div class="stat-num">88.5K</div><div class="stat-label">Terrain windows<br>indexed worldwide</div></div>
   <div class="stat-item"><div class="stat-num">12+</div><div class="stat-label">Projects<br>shipped</div></div>
   <div class="stat-item"><div class="stat-num">10</div><div class="stat-label">Certificates · NASA,<br>Esri, EO College</div></div>
@@ -322,25 +322,25 @@
     <div class="proj-grid">
 
       <article class="proj-card featured fade-in">
-        <a class="shot" href="https://tilakkumar13.github.io/sand2earth/" aria-label="Open Sand to Earth">
-          <img src="sand2earth.png" alt="Sand to Earth: a sand sculpture turning into real terrain" loading="lazy">
+        <a class="shot" href="https://tilakkumar13.github.io/sand2planet/" aria-label="Open Sand to Planet">
+          <img src="sand2planet.png" alt="Sand to Planet: a sand sculpture that turns into real terrain on Earth or Mars" loading="lazy">
           <span class="badge">● Live</span>
         </a>
         <div class="fbody">
           <div class="proj-num">01</div>
           <div class="proj-cat">GIS × Computer Vision × Deep Learning</div>
-          <h3 class="proj-title">Sand to Earth</h3>
-          <p class="proj-desc">Sculpt a landscape in sand or clay, take one photo, and find where that shape exists on Earth. A depth
-            model turns the photo into a height map, which is searched against 88,531 windows of real terrain.</p>
+          <h3 class="proj-title">Sand to Planet</h3>
+          <p class="proj-desc">Sculpt a landscape in sand or clay, take one photo, and find where that shape exists on Earth or Mars. A
+            depth model turns the photo into a height map, searched against 88,531 windows of Earth terrain and 102,915 of Mars (NASA MOLA).</p>
           <ul class="points">
             <li><b>Learned, rotation-invariant matcher</b> trained contrastively on a laptop CPU</li>
             <li><b>69% top-1</b> on simulated sculptures placed anywhere, in regions held out of training (8% before the off-grid retraining)</li>
-            <li><b>Latitude-aware index</b> that removes Web Mercator's polar bias</li>
+            <li><b>Latitude-aware index</b> that removes Web Mercator's polar bias; <b>Mars mode</b> with IAU place names and NASA Mars Trek maps</li>
           </ul>
           <div class="proj-tech"><span class="tech-pill">PyTorch</span><span class="tech-pill">Depth Anything V2</span><span class="tech-pill">Contrastive learning</span><span class="tech-pill">DEMs</span><span class="tech-pill">Sentinel-2</span><span class="tech-pill">Three.js</span></div>
           <div class="gh-row">
-            <a href="https://tilakkumar13.github.io/sand2earth/" class="gh-link solid">↗ Live site</a>
-            <a href="https://github.com/Tilakkumar13/sand2earth" class="gh-link">↗ GitHub</a>
+            <a href="https://tilakkumar13.github.io/sand2planet/" class="gh-link solid">↗ Live site</a>
+            <a href="https://github.com/Tilakkumar13/sand2planet" class="gh-link">↗ GitHub</a>
           </div>
         </div>
       </article>
