@@ -284,9 +284,9 @@
       <div class="hero-title-line fade-in d2">Mapping the Earth. Training the machines.</div>
       <p class="hero-desc fade-in d2">MSc student in <strong>Geospatial Technologies (Erasmus Mundus)</strong> at the University of Münster and
         student research assistant in computer vision. I build systems that connect elevation and satellite data with machine
-        learning, most recently <strong>Sand to Planet</strong>, which finds where a hand-sculpted landscape exists on Earth or Mars.</p>
+        learning, most recently <strong>Fallen</strong>, a live globe of space debris coming back to Earth and the people who live under its path.</p>
       <div class="hero-cta fade-in d3">
-        <a href="https://tilakkumar13.github.io/sand2planet/" class="btn-primary">↗ Open Sand to Planet</a>
+        <a href="https://tilakkumar13.github.io/fallen/" class="btn-primary">↗ Open Fallen</a>
         <a href="#projects" class="btn-secondary">↓ View projects</a>
       </div>
     </div>
@@ -310,7 +310,7 @@
 
 <div class="stats-row">
   <div class="stat-item"><div class="stat-num">69%</div><div class="stat-label">Realistic match rate<br>Sand to Planet (Earth)</div></div>
-  <div class="stat-item"><div class="stat-num">88.5K</div><div class="stat-label">Terrain windows<br>indexed worldwide</div></div>
+  <div class="stat-item"><div class="stat-num">10K+</div><div class="stat-label">Satellites tracked live<br>Fallen</div></div>
   <div class="stat-item"><div class="stat-num">12+</div><div class="stat-label">Projects<br>shipped</div></div>
   <div class="stat-item"><div class="stat-num">10</div><div class="stat-label">Certificates · NASA,<br>Esri, EO College</div></div>
 </div>
@@ -321,13 +321,38 @@
     <h2 class="section-heading fade-in">Systems I've <em>built</em></h2>
     <div class="proj-grid">
 
-      <article class="proj-card featured fade-in">
+            <article class="proj-card featured fade-in">
+        <a class="shot" href="https://tilakkumar13.github.io/fallen/" aria-label="Open Fallen">
+          <img src="fallen.jpg" alt="Fallen: a live globe of satellites and rocket bodies coming back to Earth" loading="lazy">
+          <span class="badge">● Live</span>
+        </a>
+        <div class="fbody">
+          <div class="proj-num">01</div>
+          <div class="proj-cat">GIS × Orbital Mechanics × Space Policy</div>
+          <h3 class="proj-title">Fallen</h3>
+          <p class="proj-desc">A live globe of everything coming back from orbit: where each re-entering satellite or rocket body can
+            fall during its prediction window, who lives under that path, which country is liable under the UN Liability
+            Convention, and what has actually been found on the ground.</p>
+          <ul class="points">
+            <li><b>Original finding:</b> high-income countries hold 43% of recorded debris finds but only 12% of the exposure. China has 0 against ~13 expected</li>
+            <li><b>10,000+ satellites</b> propagated with SGP4 in the browser on a CesiumJS globe lit by the real sun</li>
+            <li><b>GHS-POP population</b> within 50 km of every path, updated automatically by GitHub Actions, with each forecast scored once the object comes down</li>
+          </ul>
+          <div class="proj-tech"><span class="tech-pill">SGP4</span><span class="tech-pill">CesiumJS</span><span class="tech-pill">GHS-POP</span><span class="tech-pill">Python</span><span class="tech-pill">GitHub Actions</span><span class="tech-pill">Statistics</span></div>
+          <div class="gh-row">
+            <a href="https://tilakkumar13.github.io/fallen/" class="gh-link solid">↗ Live site</a>
+            <a href="https://github.com/Tilakkumar13/fallen" class="gh-link">↗ GitHub</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="proj-card featured flip fade-in">
         <a class="shot" href="https://tilakkumar13.github.io/sand2planet/" aria-label="Open Sand to Planet">
           <img src="sand2planet.png" alt="Sand to Planet: a sand sculpture that turns into real terrain on Earth or Mars" loading="lazy">
           <span class="badge">● Live</span>
         </a>
         <div class="fbody">
-          <div class="proj-num">01</div>
+          <div class="proj-num">02</div>
           <div class="proj-cat">GIS × Computer Vision × Deep Learning</div>
           <h3 class="proj-title">Sand to Planet</h3>
           <p class="proj-desc">Sculpt a landscape in sand or clay, take one photo, and find where that shape exists on Earth or Mars. A
@@ -351,7 +376,7 @@
           <span class="badge">Prototype</span>
         </a>
         <div class="fbody">
-          <div class="proj-num">02</div>
+          <div class="proj-num">03</div>
           <div class="proj-cat">Deep Learning × Planetary Science</div>
           <h3 class="proj-title">Mars Rover Terrain Navigation</h3>
           <p class="proj-desc">Semantic segmentation of NASA Perseverance navigation-camera images into soil, rock, sky and
@@ -367,7 +392,7 @@
       </article>
 
       <article class="proj-card fade-in">
-        <div class="proj-num">03</div>
+        <div class="proj-num">04</div>
         <div class="proj-cat">Climate · Remote Sensing · Agriculture</div>
         <h3 class="proj-title">AgriRisk: Tolima Drought Monitor</h3>
         <p class="proj-desc">Monthly rainfall anomalies for 47 Colombian municipalities and 58,842 ha of rice from NASA POWER, with
@@ -380,7 +405,7 @@
       </article>
 
       <article class="proj-card fade-in">
-        <div class="proj-num">04</div>
+        <div class="proj-num">05</div>
         <div class="proj-cat">AI · Disaster Management · Philippines</div>
         <h3 class="proj-title">AI Early Warning System for Landslides</h3>
         <p class="proj-desc">As data analysis lead, built a landslide risk prediction system for disaster-prone regions of the
@@ -389,7 +414,7 @@
       </article>
 
       <article class="proj-card fade-in">
-        <div class="proj-num">05</div>
+        <div class="proj-num">06</div>
         <div class="proj-cat">Geospatial · ML · Full-Stack</div>
         <h3 class="proj-title">NYC Accident Risk Intelligence</h3>
         <p class="proj-desc">PostGIS hotspot detection, a severity-risk model and a Mapbox interface with a 24-hour animation, on a
@@ -398,7 +423,7 @@
       </article>
 
       <article class="proj-card fade-in">
-        <div class="proj-num">06</div>
+        <div class="proj-num">07</div>
         <div class="proj-cat">Climate · Remote Sensing · Carbon</div>
         <h3 class="proj-title">Coastal Blue Carbon, Sundarbans</h3>
         <p class="proj-desc">Mangrove mapping and carbon-stock estimates from Sentinel-2 and MODIS in Google Earth Engine, with
@@ -407,7 +432,7 @@
       </article>
 
       <article class="proj-card fade-in">
-        <div class="proj-num">07</div>
+        <div class="proj-num">08</div>
         <div class="proj-cat">Remote Sensing · Earth Engine</div>
         <h3 class="proj-title">Land Cover Change, 2001–2020</h3>
         <p class="proj-desc">Change maps and area statistics from MODIS MCD12Q1 (500 m) across 17 land-cover classes, exported as
@@ -416,7 +441,7 @@
       </article>
 
       <article class="proj-card fade-in">
-        <div class="proj-num">08</div>
+        <div class="proj-num">09</div>
         <div class="proj-cat">Renewable Energy · Spatial Analysis</div>
         <h3 class="proj-title">Solar Suitability Score</h3>
         <p class="proj-desc">Composite suitability index from NDVI, land cover, terrain slope and solar radiation, using MODIS and
@@ -425,7 +450,7 @@
       </article>
 
       <article class="proj-card fade-in">
-        <div class="proj-num">09</div>
+        <div class="proj-num">10</div>
         <div class="proj-cat">GIS · Web App · Logistics</div>
         <h3 class="proj-title">NYC Truck Routing Platform</h3>
         <p class="proj-desc">Truck-specific routes across NYC that respect vehicle dimensions and local rules, with Google Maps
@@ -434,7 +459,7 @@
       </article>
 
       <article class="proj-card fade-in">
-        <div class="proj-num">10</div>
+        <div class="proj-num">11</div>
         <div class="proj-cat">Remote Sensing · LiDAR · DEMs</div>
         <h3 class="proj-title">LiDAR Flight Planning</h3>
         <p class="proj-desc">DEM analysis to set flight altitude and swath width over varied terrain, for more accurate and cheaper
