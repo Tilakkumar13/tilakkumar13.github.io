@@ -58,7 +58,10 @@
   .hero-inner { width: 100%; max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 64px; align-items: center; }
   .hero-label { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
   .hero-label::before { content: ''; width: 32px; height: 1px; background: var(--accent); flex: none; }
-  .hero-name { font-family: 'Syne', Georgia, serif; font-weight: 800; font-size: min(8.6cqw, 104px); line-height: 0.95; letter-spacing: -0.03em; white-space: nowrap; background: linear-gradient(135deg, #fff 0%, #a0b4c8 60%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-name { font-family: 'Syne', Georgia, serif; font-weight: 800; font-size: min(8.6cqw, 104px); line-height: 0.95; letter-spacing: -0.03em; white-space: nowrap; color: #fff; }
+  /* gradient on each line: Safari doesn't paint background-clip:text through block-level children */
+  .hero-name > span { width: fit-content; background: linear-gradient(135deg, #fff 0%, #a0b4c8 60%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .hero-name > span:last-child { background-image: linear-gradient(135deg, #fff 0%, #d3dce6 100%); } /* the second line sits in the white part of the original single gradient */
   .hero-text { container-type: inline-size; min-width: 0; }
   .hero-name > span { display: block; }
   .hero-name > span + span { margin-top: .04em; }
@@ -231,6 +234,8 @@
     .frame { max-width: 300px; order: -1; }
     .hero-name { font-size: 15cqw; line-height: .98; }
     .hero-name .w { display: block; }
+    .hero-name > span:first-child { background: none; -webkit-text-fill-color: currentColor; }
+    .hero-name .w { background: linear-gradient(135deg, #fff 0%, #a0b4c8 60%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
     .hero-name .glitch::after { display: none; }
     .hero-scroll { display: none; }
     .about .inner, .contact .inner { grid-template-columns: 1fr; gap: 48px; }
@@ -372,19 +377,19 @@
 
       <article class="proj-card featured stack fade-in">
         <a class="shot" href="https://github.com/Tilakkumar13/MarsRoverTerrainNav" aria-label="Mars rover project on GitHub">
-          <img src="mars.jpg" alt="Perseverance navigation-camera frames with terrain segmentation overlaid" loading="lazy">
-          <span class="badge">Prototype</span>
+          <img src="mars.jpg" alt="A Curiosity navcam image and the model's terrain segmentation: soil, bedrock, sand and big rock" loading="lazy">
+          <span class="badge">98.7% on expert test set</span>
         </a>
         <div class="fbody">
           <div class="proj-num">03</div>
           <div class="proj-cat">Deep Learning × Planetary Science</div>
           <h3 class="proj-title">Mars Rover Terrain Navigation</h3>
-          <p class="proj-desc">Semantic segmentation of NASA Perseverance navigation-camera images into soil, rock, sky and
-            obstacles, feeding hazard rules (forward, turn, stop) and A* route planning between frames.</p>
+          <p class="proj-desc">Pixel-level terrain segmentation of NASA Curiosity navigation-camera images into soil, bedrock,
+            sand and big rock, feeding a traversability grid and A* route planning.</p>
           <ul class="points">
-            <li><b>DeepLabV3+ / ResNet34</b> running at 6–26 FPS on Apple Silicon</li>
-            <li><b>Traversability scoring</b> and route planning across Jezero Crater frames</li>
-            <li>Trained on a 200-image AI4Mars subset; full-dataset training and per-class evaluation are next</li>
+            <li><b>98.7% pixel accuracy, 0.805 mean IoU</b> on the AI4Mars expert test set; finds every big-rock pixel</li>
+            <li><b>Full AI4Mars dataset:</b> DeepLabV3+ / ResNet34 trained on 15,000 images on a MacBook Air (Apple MPS)</li>
+            <li><b>Found and fixed three data bugs</b> that had held an earlier version at 48.9%</li>
           </ul>
           <div class="proj-tech"><span class="tech-pill">PyTorch</span><span class="tech-pill">DeepLabV3+</span><span class="tech-pill">Semantic segmentation</span><span class="tech-pill">AI4Mars</span><span class="tech-pill">A*</span></div>
           <div class="gh-row"><a href="https://github.com/Tilakkumar13/MarsRoverTerrainNav" class="gh-link">↗ GitHub</a></div>
