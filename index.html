@@ -377,21 +377,22 @@
 
       <article class="proj-card featured stack fade-in">
         <a class="shot" href="https://github.com/Tilakkumar13/MarsRoverTerrainNav" aria-label="Mars rover project on GitHub">
-          <img src="mars.jpg" alt="A Curiosity navcam image and the model's terrain segmentation: soil, bedrock, sand and big rock" loading="lazy">
-          <span class="badge">98.7% on expert test set</span>
+          <img src="mars.jpg" alt="Curiosity's route at site 65 on the HiRISE orbital map, with the rover's own terrain view projected on top: bedrock, sand and big rock" loading="lazy">
+          <span class="badge">Orbit misses ~half the big rocks</span>
         </a>
         <div class="fbody">
           <div class="proj-num">03</div>
-          <div class="proj-cat">Deep Learning × Planetary Science</div>
+          <div class="proj-cat">Deep Learning × Planetary GIS</div>
           <h3 class="proj-title">Mars Rover Terrain Navigation</h3>
-          <p class="proj-desc">Pixel-level terrain segmentation of NASA Curiosity navigation-camera images into soil, bedrock,
-            sand and big rock, feeding a traversability grid and A* route planning.</p>
+          <p class="proj-desc">What a rover sees on the ground that orbit can't. Curiosity's own navcam images, segmented by a
+            model trained on AI4Mars and projected onto the HiRISE orbital map with NASA's camera models and rover positions,
+            show what orbit-only route planning misses.</p>
           <ul class="points">
-            <li><b>98.7% pixel accuracy, 0.805 mean IoU</b> on the AI4Mars expert test set; finds every big-rock pixel</li>
-            <li><b>Full AI4Mars dataset:</b> DeepLabV3+ / ResNet34 trained on 15,000 images on a MacBook Air (Apple MPS)</li>
-            <li><b>Found and fixed three data bugs</b> that had held an earlier version at 48.9%</li>
+            <li><b>Orbit misses about half the big rocks and up to 40% of the sand</b> the rover saw, across 235,000 half-metre cells on 7 stretches of its route</li>
+            <li><b>1 in 4 routes planned from orbit alone</b> sends the rover through avoidable sand</li>
+            <li><b>98.7% pixel accuracy, 0.805 mean IoU</b> segmentation on the AI4Mars expert test set, after fixing three data bugs that had held it at 48.9%</li>
           </ul>
-          <div class="proj-tech"><span class="tech-pill">PyTorch</span><span class="tech-pill">DeepLabV3+</span><span class="tech-pill">Semantic segmentation</span><span class="tech-pill">AI4Mars</span><span class="tech-pill">A*</span></div>
+          <div class="proj-tech"><span class="tech-pill">PyTorch</span><span class="tech-pill">DeepLabV3+</span><span class="tech-pill">HiRISE</span><span class="tech-pill">Camera models</span><span class="tech-pill">Route planning</span></div>
           <div class="gh-row"><a href="https://github.com/Tilakkumar13/MarsRoverTerrainNav" class="gh-link">↗ GitHub</a></div>
         </div>
       </article>
